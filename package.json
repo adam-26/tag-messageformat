@@ -60,7 +60,7 @@
   },
   "scripts": {
     "test": "istanbul cover -x lib/locales.js -- _mocha tests/runner.js --reporter spec",
-    "test:ci": "istanbul cover -- _mocha test/unit/ --reporter xunit --reporter-options output=coverage/test-report.xml",
+    "test:ci": "istanbul cover -- _mocha tests/runner.js --reporter xunit --reporter-options output=coverage/test-report.xml",
     "prepublish": "grunt"
   },
   "homepage": "https://github.com/adam-26/intl-messageformat",
