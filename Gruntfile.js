@@ -175,11 +175,6 @@ module.exports = function (grunt) {
                     browsers: [
                         {
                             browserName: 'internet explorer',
-                            platform: 'Windows XP',
-                            version: '7'
-                        },
-                        {
-                            browserName: 'internet explorer',
                             platform: 'Windows 7',
                             version: '8'
                         },
@@ -200,28 +195,23 @@ module.exports = function (grunt) {
                         },
                         {
                             browserName: 'chrome',
-                            platform: 'Windows 7',
+                            platform: 'Windows 10',
                             version: '37'
                         },
                         {
                             browserName: 'firefox',
-                            platform: 'Windows 7',
+                            platform: 'Windows 10',
                             version: '32'
                         },
                         {
-                            browserName: 'iphone',
-                            platform: 'OS X 10.9',
-                            version: '7.1'
-                        },
-                        {
-                            browserName: 'android',
-                            platform: 'Linux',
-                            version: '4.4'
+                            browserName: 'MicrosoftEdge',
+                            platform: 'Windows 10',
+                            version: '16.16299'
                         },
                         {
                             browserName: 'safari',
-                            platform: 'OS X 10.9',
-                            version: '7'
+                            platform: 'macOS 10.13',
+                            version: '11.0'
                         }
                     ]
                 }

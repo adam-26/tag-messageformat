@@ -29,6 +29,21 @@
         }
     }
 
+    function $$utils$$existsIn(arr, item) {
+        if (typeof Array.prototype.indexOf === 'function') {
+            return arr.indexOf(item) !== -1;
+        }
+
+        // IE8 Support
+        for (var i = 0, len = arr.length; i < len; i++) {
+            if (arr[i] === item) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // Purposely using the same implementation as the Intl.js `Intl` polyfill.
     // Copyright 2013 Andy Earnshaw, MIT License
 
@@ -143,7 +158,7 @@
     };
 
     $$compiler$$Compiler.prototype.compileArgument = function (element) {
-        if (this.tagNames.indexOf(element.id) !== -1) {
+        if ($$utils$$existsIn(this.tagNames, element.id)) {
             throw new Error('Message has conflicting argument and tag name "' + element.id + '".');
         }
 
@@ -223,7 +238,7 @@
     };
 
     $$compiler$$Compiler.prototype.createTag = function (element, pattern) {
-        if (this.argIds.indexOf(element.name) !== -1) {
+        if ($$utils$$existsIn(this.argIds, element.name)) {
             throw new Error('Message has conflicting argument and tag name "' + element.name + '".');
         }
 

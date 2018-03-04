@@ -34,3 +34,18 @@ export function assertValueProvided(isTag, value, key, id) {
         throw err;
     }
 }
+
+export function existsIn(arr, item) {
+    if (typeof Array.prototype.indexOf === 'function') {
+        return arr.indexOf(item) !== -1;
+    }
+
+    // IE8 Support
+    for (var i = 0, len = arr.length; i < len; i++) {
+        if (arr[i] === item) {
+            return true;
+        }
+    }
+
+    return false;
+}
