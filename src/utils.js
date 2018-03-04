@@ -25,3 +25,12 @@ export function extend(obj) {
 
     return obj;
 }
+
+export function assertValueProvided(isTag, value, key, id) {
+    if (!(value && hop.call(value, key))) {
+        var err = new Error('A value must be provided for: ' + (id || key));
+        err.variableId = (id || key);
+        err.variableType = isTag ? 'function' : 'value';
+        throw err;
+    }
+}

@@ -1,0 +1,28 @@
+
+engines:
+
+  fixme:
+    enabled: true
+
+  nodesecurity:
+    enabled: true
+
+  eslint:
+    enabled: false
+
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript:
+
+ratings:
+  paths:
+  - "src/*.js"
+
+exclude_paths:
+- "lib/**/*"
+- "dist/**/*"
+- "coverage/*"
+- "tests/**/*"
+- "tmp/**/*"

@@ -18,6 +18,8 @@ Compiler.prototype.compile = function (ast) {
     this.pluralStack        = [];
     this.currentPlural      = null;
     this.pluralNumberFormat = null;
+    this.tagNames = [];
+    this.argIds = [];
 
     return this.compileMessage(ast);
 };
@@ -31,7 +33,6 @@ Compiler.prototype.compileMessage = function (ast) {
         pattern  = [];
 
     var i, len, element;
-
     for (i = 0, len = elements.length; i < len; i += 1) {
         element = elements[i];
 
@@ -42,6 +43,14 @@ Compiler.prototype.compileMessage = function (ast) {
 
             case 'argumentElement':
                 pattern.push(this.compileArgument(element));
+                break;
+
+            case 'selfClosingTagElement':
+                pattern.push(this.compileSelfClosingTag(element));
+                break;
+
+            case 'tagElement':
+                pattern.push(this.compileTag(element));
                 break;
 
             default:
@@ -75,6 +84,11 @@ Compiler.prototype.compileMessageText = function (element) {
 };
 
 Compiler.prototype.compileArgument = function (element) {
+    if (this.tagNames.indexOf(element.id) !== -1) {
+        throw new Error('Message has conflicting argument and tag name "' + element.id + '".');
+    }
+
+    this.argIds.push(element.id);
     var format = element.format;
 
     if (!format) {
@@ -149,6 +163,23 @@ Compiler.prototype.compileOptions = function (element) {
     return optionsHash;
 };
 
+Compiler.prototype.createTag = function (element, pattern) {
+    if (this.argIds.indexOf(element.name) !== -1) {
+        throw new Error('Message has conflicting argument and tag name "' + element.name + '".');
+    }
+
+    this.tagNames.push(element.name);
+    return new TagFormat(element.name, pattern);
+};
+
+Compiler.prototype.compileTag = function (element) {
+    return this.createTag(element, this.compileMessage(element.value));
+};
+
+Compiler.prototype.compileSelfClosingTag = function (element) {
+    return this.createTag(element);
+};
+
 // -- Compiler Helper Classes --------------------------------------------------
 
 function StringFormat(id) {
@@ -203,4 +234,21 @@ function SelectFormat(id, options) {
 SelectFormat.prototype.getOption = function (value) {
     var options = this.options;
     return options[value] || options.other;
+};
+
+function TagFormat(id, pattern) {
+  this.id = id;
+  this.pattern = pattern;
+}
+
+TagFormat.prototype.format = function(value, content) {
+  if (typeof value !== 'function') {
+      throw new Error('tag values require a function');
+  }
+
+  if (typeof this.pattern === 'undefined') {
+      return value(); // self-closing tag
+  }
+
+  return value(content);
 };

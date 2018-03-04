@@ -23,6 +23,29 @@ describe('IntlMessageFormat', function () {
 
     // INSTANCE METHODS
 
+
+    it ('should throw when tag and argument uses same id/name value', function () {
+        function createMf() {
+            new IntlMessageFormat("<x:link>{link}</x:link>");
+        }
+
+        expect(createMf).to.throwException(function (e) {
+            expect(e).to.be.an(Error);
+            expect(e.message).to.match(/Message has conflicting argument and tag name "link"/);
+        });
+    });
+
+    it ('should throw when argument and tag uses same id/name value', function () {
+        function createMf() {
+            new IntlMessageFormat("{link}<x:link>click</x:link>");
+        }
+
+        expect(createMf).to.throwException(function (e) {
+            expect(e).to.be.an(Error);
+            expect(e.message).to.match(/Message has conflicting argument and tag name "link"/);
+        });
+    });
+
     describe('#resolvedOptions( )', function () {
         it('should be a function', function () {
             var mf = new IntlMessageFormat('');
@@ -97,6 +120,30 @@ describe('IntlMessageFormat', function () {
         it('should return a string', function () {
             var mf = new IntlMessageFormat('');
             expect(mf.format()).to.be.a('string');
+        });
+
+        it ('should throw when nested argument is missing', function () {
+            function createMf() {
+                var mf = new IntlMessageFormat("{product.link}");
+                mf.format({ product: {} });
+            }
+
+            expect(createMf).to.throwException(function (e) {
+                expect(e).to.be.an(Error);
+                expect(e.message).to.match(/The intl string context variable 'product.link' value was not provided to the string '{product.link}'/);
+            });
+        });
+
+        it ('should throw when nested tag is missing', function () {
+            function createMf() {
+                var mf = new IntlMessageFormat("<x:product.link>click</x:product.link>");
+                mf.format({ product: {} });
+            }
+
+            expect(createMf).to.throwException(function (e) {
+                expect(e).to.be.an(Error);
+                expect(e.message).to.match(/The intl string context variable 'product.link' function was not provided to the string '<x:product.link>click<\/x:product.link>'/);
+            });
         });
     });
 
@@ -317,7 +364,7 @@ describe('IntlMessageFormat', function () {
             it('should fail when the argument in the pattern is not provided', function () {
                 expect(msg.format).to.throwException(function (e) {
                     expect(e).to.be.an(Error);
-                    expect(e.message).to.match(/The intl string context variable 'STATE' was not provided to the string '{STATE}'/);
+                    expect(e.message).to.match(/The intl string context variable 'STATE' value was not provided to the string '{STATE}'/);
                 });
             });
 
@@ -328,7 +375,7 @@ describe('IntlMessageFormat', function () {
 
                 expect(formatWithValueNameTypo).to.throwException(function (e) {
                     expect(e).to.be.an(Error);
-                    expect(e.message).to.match(/The intl string context variable 'STATE' was not provided to the string '{STATE}'/);
+                    expect(e.message).to.match(/The intl string context variable 'STATE' value was not provided to the string '{STATE}'/);
                 });
             });
 
@@ -348,7 +395,7 @@ describe('IntlMessageFormat', function () {
 
                 expect(formatWithMissingValue).to.throwException(function (e) {
                     expect(e).to.be.an(Error);
-                    expect(e.message).to.match(/The intl string context variable 'ST1ATE' was not provided to the string '{ST1ATE}'/);
+                    expect(e.message).to.match(/The intl string context variable 'ST1ATE' value was not provided to the string '{ST1ATE}'/);
                 });
             });
 
@@ -359,7 +406,7 @@ describe('IntlMessageFormat', function () {
 
                 expect(formatWithMissingValue).to.throwException(function (e) {
                     expect(e).to.be.an(Error);
-                    expect(e.message).to.match(/The intl string context variable 'ST1ATE' was not provided to the string '{ST1ATE}'/);
+                    expect(e.message).to.match(/The intl string context variable 'ST1ATE' value was not provided to the string '{ST1ATE}'/);
                 });
             });
 
@@ -389,6 +436,104 @@ describe('IntlMessageFormat', function () {
             expect(mf.format({year: 33})).to.equal('This is my 33rd birthday.');
             expect(mf.format({year: 44})).to.equal('This is my 44th birthday.');
             expect(mf.format({year: 1024})).to.equal('This is my 1,024th birthday.');
+        });
+    });
+
+    describe('tags', function() {
+        it('should replace a single tag placeholder using the variable function', function () {
+            var mf = new IntlMessageFormat("<x:link>click me</x:link>");
+
+            var calls = [];
+            var linkFunc = function (content) {
+                calls.push(arguments);
+                return "<a href='#'>" + content + "</a>";
+            };
+
+            var result = mf.format({link: linkFunc});
+
+            expect(calls).to.have.length(1);
+            expect(calls[0]).to.have.length(1);
+            expect(calls[0][0]).to.eql("click me");
+            expect(result).to.equal("<a href='#'>click me</a>");
+        });
+
+        it('should replace a single tag placeholder with nested tag name', function () {
+            var mf = new IntlMessageFormat("<x:product.link>buy now</x:product.link>");
+
+            var calls = [];
+            var linkFunc = function (content) {
+                calls.push(arguments);
+                return "<a href='#'>" + content + "</a>";
+            };
+
+            var result = mf.format({ product: { link: linkFunc } });
+
+            expect(calls).to.have.length(1);
+            expect(calls[0]).to.have.length(1);
+            expect(calls[0][0]).to.eql("buy now");
+            expect(result).to.equal("<a href='#'>buy now</a>");
+        });
+
+        it('should replace nested tag placeholders using the variable function', function () {
+            var mf = new IntlMessageFormat("<x:link>get a <x:bold>discount</x:bold> now</x:link>");
+
+            var calls = [];
+            var linkFunc = function (content) {
+                calls.push(arguments);
+                return "<a href='#'>" + content + "</a>";
+            };
+
+            var boldFunc = function (content) {
+                calls.push(arguments);
+                return "<b>" + content + "</b>";
+            };
+
+            var result = mf.format({
+                link: linkFunc,
+                bold: boldFunc
+            });
+
+            expect(calls).to.have.length(2);
+            expect(calls[0]).to.have.length(1);
+            expect(calls[0][0]).to.eql("discount");
+            expect(calls[1]).to.have.length(1);
+            expect(calls[1][0]).to.eql("get a <b>discount</b> now");
+            expect(result).to.equal("<a href='#'>get a <b>discount</b> now</a>");
+        });
+
+        it('should replace repeated tag placeholders using the variable function', function () {
+            var mf = new IntlMessageFormat("<x:important>privacy</x:important> and <x:important>security</x:important>");
+
+            var calls = [];
+            var importantFunc = function (content) {
+                calls.push(arguments);
+                return "<u>" + content + "</u>";
+            };
+
+            var result = mf.format({important: importantFunc});
+
+            expect(calls).to.have.length(2);
+            expect(calls[0]).to.have.length(1);
+            expect(calls[0][0]).to.eql("privacy");
+            expect(calls[1]).to.have.length(1);
+            expect(calls[1][0]).to.eql("security");
+            expect(result).to.equal("<u>privacy</u> and <u>security</u>");
+        });
+
+        it('should replace the self-closing tag using the variable function', function () {
+            var mf = new IntlMessageFormat("<x:emoji />");
+
+            var calls = [];
+            var tagFunc = function () {
+                calls.push(arguments);
+                return ":)";
+            };
+
+            var result = mf.format({emoji: tagFunc});
+
+            expect(calls).to.have.length(1);
+            expect(calls[0][0]).to.be(undefined);
+            expect(result).to.equal(":)");
         });
     });
 
