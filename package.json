@@ -33,7 +33,7 @@
     "./lib/locales.js": false
   },
   "dependencies": {
-    "tag-messageformat-parser": "2.0.0"
+    "tag-messageformat-parser": "2.0.1"
   },
   "devDependencies": {
     "benchmark": "^1.0.0",

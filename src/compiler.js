@@ -6,6 +6,8 @@ See the accompanying LICENSE file for terms.
 
 /* jslint esnext: true */
 
+import {existsIn} from './utils';
+
 export default Compiler;
 
 function Compiler(locales, formats, pluralFn) {
@@ -84,7 +86,7 @@ Compiler.prototype.compileMessageText = function (element) {
 };
 
 Compiler.prototype.compileArgument = function (element) {
-    if (this.tagNames.indexOf(element.id) !== -1) {
+    if (existsIn(this.tagNames, element.id)) {
         throw new Error('Message has conflicting argument and tag name "' + element.id + '".');
     }
 
@@ -164,7 +166,7 @@ Compiler.prototype.compileOptions = function (element) {
 };
 
 Compiler.prototype.createTag = function (element, pattern) {
-    if (this.argIds.indexOf(element.name) !== -1) {
+    if (existsIn(this.argIds, element.name)) {
         throw new Error('Message has conflicting argument and tag name "' + element.name + '".');
     }
 
