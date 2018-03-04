@@ -202,16 +202,6 @@ module.exports = function (grunt) {
                             browserName: 'firefox',
                             platform: 'Windows 10',
                             version: '32'
-                        },
-                        {
-                            browserName: 'MicrosoftEdge',
-                            platform: 'Windows 10',
-                            version: '16.16299'
-                        },
-                        {
-                            browserName: 'safari',
-                            platform: 'macOS 10.13',
-                            version: '11.0'
                         }
                     ]
                 }
