@@ -6,10 +6,10 @@ See the accompanying LICENSE file for terms.
 
 /* jslint esnext: true */
 
-import {extend, hop} from './utils';
+import {extend, hop, assertValueProvided} from './utils';
 import {defineProperty, objCreate} from './es5';
 import Compiler from './compiler';
-import parser from 'intl-messageformat-parser';
+import parser from 'tag-messageformat-parser';
 
 export default MessageFormat;
 
@@ -46,7 +46,7 @@ function MessageFormat(message, locales, formats) {
       } catch (e) {
         if (e.variableId) {
           throw new Error(
-            'The intl string context variable \'' + e.variableId + '\'' +
+            'The intl string context variable \'' + e.variableId + '\' ' + e.variableType +
             ' was not provided to the string \'' + message + '\''
           );
         } else {
@@ -201,19 +201,29 @@ MessageFormat.prototype._format = function (pattern, values) {
         id = part.id;
 
         // Enforce that all required values are provided by the caller.
-        if (!(values && hop.call(values, id))) {
-          err = new Error('A value must be provided for: ' + id);
-          err.variableId = id;
-          throw err;
-        }
+        if (id.indexOf('.') !== -1) {
+            var token;
+            var tokens = id.split('.');
+            value = values;
 
-        value = values[id];
+            for (var t = 0, tLen = tokens.length; t < tLen; t++) {
+                token = tokens[t];
+                assertValueProvided(!!part.pattern, value, token, id);
+                value = value[token];
+            }
+        }
+        else {
+            assertValueProvided(!!part.pattern, values, id);
+            value = values[id];
+        }
 
         // Recursively format plural and select parts' option — which can be a
         // nested pattern structure. The choosing of the option to use is
         // abstracted-by and delegated-to the part helper object.
         if (part.options) {
             result += this._format(part.getOption(value), values);
+        } else if (part.pattern) {
+            result += part.format(value, this._format(part.pattern, values));
         } else {
             result += part.format(value);
         }

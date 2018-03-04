@@ -2,5 +2,10 @@ coverage/
 tasks/
 tests/
 tmp/
-.travis.yml
 Gruntfile.js
+npm-shrinkwrap.json
+.circleci/
+.codeclimate.yml
+npm-shrinkwrap.json
+package-lock.json
+yarn.lock

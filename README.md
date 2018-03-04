@@ -1,13 +1,72 @@
-Intl MessageFormat
+Tag MessageFormat
 ==================
 
 Formats ICU Message strings with number, date, plural, and select placeholders to create localized messages.
 
-[![npm Version][npm-badge]][npm]
-[![Build Status][travis-badge]][travis]
-[![Dependency Status][david-badge]][david]
+[![npm](https://img.shields.io/npm/v/tag-messageformat.svg)](https://www.npmjs.com/package/tag-messageformat)
+[![npm](https://img.shields.io/npm/dm/tag-messageformat.svg)](https://www.npmjs.com/package/tag-messageformat)
+[![CircleCI branch](https://img.shields.io/circleci/project/github/adam-26/tag-messageformat/master.svg)](https://circleci.com/gh/adam-26/tag-messageformat/tree/master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/69f68331d6a0047b1636/maintainability)](https://codeclimate.com/github/adam-26/intl-messageformat/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/69f68331d6a0047b1636/test_coverage)](https://codeclimate.com/github/adam-26/intl-messageformat/test_coverage)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
-[![Sauce Test Status][sauce-badge]][sauce]
+> This is a fork of [intl-messageformat](https://github.com/yahoo/intl-messageformat)
+
+_Differences_ from the original package:
+ * It uses the [tag-messageformat-parser](github.com/adam-26/intl-messageformat-parser)
+ * `Tags` are supported in messages - this is **not** part of the ICU message "spec"
+ * The `other` option is **required** for `plural`, `select` and `selectordinal` as is required by other ICU parsers
+ * Whitespace in `plural` messages is preserved
+ * `.` is permitted to be used in argument and tag names
+
+What is a tag?
+--------
+A `tag` enables style _placeholders_ to be included in the translation message _without_ including any of the
+style information in the translation message.
+
+This provides 3 benefits:
+  1. It decouples the styling of the text from the translations, allowing the styling to change independently of translations.
+  2. It allows translation messages to retain context for text that will be styled
+  3. Tags can be named to provide _hints_ to translators
+
+A tag **must** adhere to the following conventions:
+ * begin with `<x:`
+ * The tag name can include only numbers, ascii letters, underscore and dot `.`.
+ * must be closed, self-closing tags are supported but should be used sparingly as they can be confusing for translators
+ * Valid tag examples:
+   * `<x:0>hello</x:0>`
+   * `<x:link>click me</x:link>`
+   * `<x:emoji />`
+
+Here's an _simple_ example:
+
+```js
+import IntlMessageFormat from 'tag-messageformat';
+
+var enNumPhotos = new IntlMessageFormat('By signing up you agree to our <x:link>terms and conditions</x:link>', 'en-US');
+var output = enNumPhotos.format({
+  link: (content) => `<a href="#">${content}</a>`
+});
+
+console.log(output); // => "By signing up you agree to our <a href="#">terms and conditions</a>"
+```
+
+Using **descriptive names** for tag names can provide hints to translators about the purpose of the tags.
+In the above example, the text `terms and conditions` will be used to display a link the user can click on.
+
+Tags and arguments can be used in combination in ICU message formats.
+
+This example uses a `{name}` argument in a tag.
+
+```js
+var enNumPhotos = new IntlMessageFormat('Welcome back <x:bold>{name}</x:bold>', 'en-US');
+var output = enNumPhotos.format({
+  bold: (content) => `<span class="boldText">${content}</span>`,
+  name: 'Bob'
+});
+
+console.log(output); // => "Welcome back <span class="boldText">Bob</span>"
+```
 
 
 Overview
@@ -121,13 +180,13 @@ _Note: When using the Intl.js Polyfill in Node.js, it will automatically load th
 ### Loading Intl MessageFormat in a browser
 
 ```html
-<script src="intl-messageformat/intl-messageformat.min.js"></script>
+<script src="tag-messageformat/intl-messageformat.min.js"></script>
 ```
 
 By default, Intl MessageFormat ships with the locale data for English (`en`) built-in to the library's runtime. When you need to format data in another locale, include its data; e.g., for French:
 
 ```html
-<script src="intl-messageformat/locale-data/fr.js"></script>
+<script src="tag-messageformat/locale-data/fr.js"></script>
 ```
 
 _Note: All 200+ languages supported by this package use their root BCP 47 language tag; i.e., the part before the first hyphen (if any)._
@@ -137,7 +196,7 @@ _Note: All 200+ languages supported by this package use their root BCP 47 langua
 Simply `require()` this package:
 
 ```js
-var IntlMessageFormat = require('intl-messageformat');
+var IntlMessageFormat = require('tag-messageformat');
 ```
 
 _Note: in Node.js, the data for all 200+ languages is loaded along with the library._
@@ -257,25 +316,3 @@ License
 
 This software is free to use under the Yahoo! Inc. BSD license.
 See the [LICENSE file][LICENSE] for license text and copyright information.
-
-
-[npm]: https://www.npmjs.org/package/intl-messageformat
-[npm-badge]: https://img.shields.io/npm/v/intl-messageformat.svg?style=flat-square
-[david]: https://david-dm.org/yahoo/intl-messageformat
-[david-badge]: https://img.shields.io/david/yahoo/intl-messageformat.svg?style=flat-square
-[travis]: https://travis-ci.org/yahoo/intl-messageformat
-[travis-badge]: https://img.shields.io/travis/yahoo/intl-messageformat/master.svg?style=flat-square
-[sauce]: https://saucelabs.com/u/intl-messageformat
-[sauce-badge]: https://saucelabs.com/browser-matrix/intl-messageformat.svg
-[strawman]: http://wiki.ecmascript.org/doku.php?id=globalization:messageformatting
-[parser]: https://github.com/yahoo/intl-messageformat-parser
-[ICU]: http://userguide.icu-project.org/formatparse/messages
-[CLDR]: http://cldr.unicode.org/
-[Intl]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
-[Intl-NF]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
-[Intl-DTF]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
-[Intl-Node]: https://github.com/joyent/node/issues/6371
-[Intl.js]: https://github.com/andyearnshaw/Intl.js
-[rawgit]: https://rawgit.com/
-[semver]: http://semver.org/
-[LICENSE]: https://github.com/yahoo/intl-messageformat/blob/master/LICENSE
