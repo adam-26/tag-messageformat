@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.1.0"></a>
+# [3.1.0](https://github.com/adam-26/intl-messageformat/compare/v3.0.0...v3.1.0) (2018-03-05)
+
+
+### Features
+
+* **code:** Unescaped HTML tags ([586d66c](https://github.com/adam-26/intl-messageformat/commit/586d66c))
+* **code:** Unescaped HTML tags ([#4](https://github.com/adam-26/intl-messageformat/issues/4)) ([1bb3953](https://github.com/adam-26/intl-messageformat/commit/1bb3953))
+
+
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/adam-26/intl-messageformat/compare/v2.2.0...v3.0.0) (2018-03-04)
 
