@@ -6,7 +6,7 @@ See the accompanying LICENSE file for terms.
 
 /* jslint esnext: true */
 
-const hasIndexOfMethod = typeof Array.prototype.indexOf === 'function';
+var hasIndexOfMethod = typeof Array.prototype.indexOf === 'function';
 
 export var hop = Object.prototype.hasOwnProperty;
 

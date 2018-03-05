@@ -164,7 +164,7 @@ module.exports = function (grunt) {
                         'http://127.0.0.1:9999/tests/browserify/index.html'
                     ],
 
-                    build: process.env.TRAVIS_BUILD_NUMBER,
+                    build: process.env.CIRCLE_BUILD_NUM,
                     sauceConfig: {
                         'record-video': false,
                         'capture-html': false,
