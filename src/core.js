@@ -6,7 +6,7 @@ See the accompanying LICENSE file for terms.
 
 /* jslint esnext: true */
 
-import {extend, hop, assertValueProvided} from './utils';
+import {extend, hop, assertValueProvided, containsChar} from './utils';
 import {defineProperty, objCreate} from './es5';
 import Compiler from './compiler';
 import parser from 'tag-messageformat-parser';
@@ -16,8 +16,6 @@ export default MessageFormat;
 // -- MessageFormat --------------------------------------------------------
 
 function MessageFormat(message, locales, formats, opts) {
-    this._compilerOpts = opts || {};
-
     // Parse string messages into an AST.
     var ast = typeof message === 'string' ?
             MessageFormat.__parse(message) : message;
@@ -37,7 +35,7 @@ function MessageFormat(message, locales, formats, opts) {
     // `format()` invocations. **Note:** This passes the `locales` set provided
     // to the constructor instead of just the resolved locale.
     var pluralFn = this._findPluralRuleFunction(this._locale);
-    var pattern  = this._compilePattern(ast, locales, formats, pluralFn);
+    var pattern  = this._compilePattern(ast, locales, formats, pluralFn, opts);
 
     // "Bind" `format()` method to `this` so it can be passed by reference like
     // the other `Intl` APIs.
@@ -162,8 +160,8 @@ MessageFormat.prototype.resolvedOptions = function () {
     };
 };
 
-MessageFormat.prototype._compilePattern = function (ast, locales, formats, pluralFn) {
-    var compiler = new Compiler(locales, formats, pluralFn, this._compilerOpts);
+MessageFormat.prototype._compilePattern = function (ast, locales, formats, pluralFn, opts) {
+    var compiler = new Compiler(locales, formats, pluralFn, opts);
     return compiler.compile(ast);
 };
 
@@ -203,7 +201,7 @@ MessageFormat.prototype._format = function (pattern, values) {
         id = part.id;
 
         // Enforce that all required values are provided by the caller.
-        if (id.indexOf('.') !== -1) {
+        if (containsChar(id, '.')) {
             var token;
             var tokens = id.split('.');
             value = values;

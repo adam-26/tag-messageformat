@@ -112,6 +112,12 @@ describe('IntlMessageFormat', function () {
     });
 
     describe('#format( [object] )', function () {
+        var pluralMsg = '' +
+            'I have {numPeople, plural,' +
+            '=0 {zero points}' +
+            'one {a point}' +
+            '}.';
+
         it('should be a function', function () {
             var mf = new IntlMessageFormat('');
             expect(mf.format).to.be.a('function');
@@ -146,15 +152,9 @@ describe('IntlMessageFormat', function () {
             });
         });
 
-        it ('should throw when `other` is required but missing from the message', function () {
+        it ('should throw when `other` is missing from the message', function () {
             function createMf() {
-                var msg = '' +
-                    'I have {numPeople, plural,' +
-                    'zero {zero points}' +
-                    'one {a point}' +
-                    '}.';
-
-                new IntlMessageFormat(msg, 'ar');
+                new IntlMessageFormat(pluralMsg, 'en');
             }
 
             expect(createMf).to.throwException(function (e) {
@@ -163,15 +163,30 @@ describe('IntlMessageFormat', function () {
             });
         });
 
-        it ('should return a message when `other` is missing but not required', function () {
-            var msg = '' +
-                'I have {numPeople, plural,' +
-                'zero {zero points}' +
-                'one {a point}' +
-                '}.';
+        it ('should throw when `other` is required but missing from the message', function () {
+            function createMf() {
+                new IntlMessageFormat(pluralMsg, 'en', {}, { requireOther: true });
+            }
 
-            var mf = new IntlMessageFormat(msg, 'ar', {}, { requireOther: false });
+            expect(createMf).to.throwException(function (e) {
+                expect(e).to.be.an(Error);
+                expect(e.message).to.match(/pluralFormat requires an `other` option, this can be disabled./);
+            });
+        });
+
+        it ('should return formatted message when `other` is missing but not required', function () {
+            var mf = new IntlMessageFormat(pluralMsg, 'en', {}, { requireOther: false });
             expect(mf.format({ numPeople: 0 })).to.equal('I have zero points.');
+        });
+
+        it ('should return an empty `other` message part when `other` is not required and not defined', function () {
+            var mf = new IntlMessageFormat(pluralMsg, 'en', {}, { requireOther: false });
+            expect(mf.format({ numPeople: 10 })).to.equal('I have .');
+        });
+
+        it ('should format nested object values', function () {
+            var mf = new IntlMessageFormat('My name is {user.name}', 'en');
+            expect(mf.format({ user: { name: 'Bob' } })).to.equal('My name is Bob');
         });
     });
 

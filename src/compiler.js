@@ -14,11 +14,9 @@ function Compiler(locales, formats, pluralFn, opts) {
     this.locales  = locales;
     this.formats  = formats;
     this.pluralFn = pluralFn;
-    this.options = {
-        requireOther: (opts && typeof opts.requireOther === 'boolean') ?
-            opts.requireOther :
-            true
-    };
+    this.requireOther = (opts && typeof opts.requireOther === 'boolean') ?
+        opts.requireOther :
+        true;
 }
 
 Compiler.prototype.compile = function (ast) {
@@ -149,7 +147,7 @@ Compiler.prototype.compileOptions = function (element) {
         options     = format.options,
         optionsHash = {};
 
-    if (this.options.requireOther && !element.hasOther) {
+    if (this.requireOther === true && !element.hasOther) {
         throw new Error(format.type + ' requires an `other` option, this can be disabled.');
     }
 
@@ -219,7 +217,7 @@ PluralFormat.prototype.getOption = function (value) {
     var option = options['=' + value] ||
             options[this.pluralFn(value - this.offset, this.useOrdinal)];
 
-    return option || options.other;
+    return option || options.other || [];
 };
 
 function PluralOffsetString(id, offset, numberFormat, string) {
@@ -244,7 +242,7 @@ function SelectFormat(id, options) {
 
 SelectFormat.prototype.getOption = function (value) {
     var options = this.options;
-    return options[value] || options.other;
+    return options[value] || options.other || [];
 };
 
 function TagFormat(id, pattern) {
