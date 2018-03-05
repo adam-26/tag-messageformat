@@ -145,6 +145,34 @@ describe('IntlMessageFormat', function () {
                 expect(e.message).to.match(/The intl string context variable 'product.link' function was not provided to the string '<x:product.link>click<\/x:product.link>'/);
             });
         });
+
+        it ('should throw when `other` is required but missing from the message', function () {
+            function createMf() {
+                var msg = '' +
+                    'I have {numPeople, plural,' +
+                    'zero {zero points}' +
+                    'one {a point}' +
+                    '}.';
+
+                new IntlMessageFormat(msg, 'ar');
+            }
+
+            expect(createMf).to.throwException(function (e) {
+                expect(e).to.be.an(Error);
+                expect(e.message).to.match(/pluralFormat requires an `other` option, this can be disabled./);
+            });
+        });
+
+        it ('should return a message when `other` is missing but not required', function () {
+            var msg = '' +
+                'I have {numPeople, plural,' +
+                'zero {zero points}' +
+                'one {a point}' +
+                '}.';
+
+            var mf = new IntlMessageFormat(msg, 'ar', {}, { requireOther: false });
+            expect(mf.format({ numPeople: 0 })).to.equal('I have zero points.');
+        });
     });
 
     describe('using a string pattern', function () {
@@ -440,6 +468,11 @@ describe('IntlMessageFormat', function () {
     });
 
     describe('tags', function() {
+        it('should not prevent use of HTML tags', function () {
+            var mf = new IntlMessageFormat("<span>hello</span>");
+            expect(mf.format()).to.equal("<span>hello</span>");
+        });
+
         it('should replace a single tag placeholder using the variable function', function () {
             var mf = new IntlMessageFormat("<x:link>click me</x:link>");
 

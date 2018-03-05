@@ -10,10 +10,15 @@ import {existsIn} from './utils';
 
 export default Compiler;
 
-function Compiler(locales, formats, pluralFn) {
+function Compiler(locales, formats, pluralFn, opts) {
     this.locales  = locales;
     this.formats  = formats;
     this.pluralFn = pluralFn;
+    this.options = {
+        requireOther: (opts && typeof opts.requireOther === 'boolean') ?
+            opts.requireOther :
+            true
+    };
 }
 
 Compiler.prototype.compile = function (ast) {
@@ -143,6 +148,10 @@ Compiler.prototype.compileOptions = function (element) {
     var format      = element.format,
         options     = format.options,
         optionsHash = {};
+
+    if (this.options.requireOther && !element.hasOther) {
+        throw new Error(format.type + ' requires an `other` option, this can be disabled.');
+    }
 
     // Save the current plural element, if any, then set it to a new value when
     // compiling the options sub-patterns. This conforms the spec's algorithm

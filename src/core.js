@@ -15,7 +15,9 @@ export default MessageFormat;
 
 // -- MessageFormat --------------------------------------------------------
 
-function MessageFormat(message, locales, formats) {
+function MessageFormat(message, locales, formats, opts) {
+    this._compilerOpts = opts || {};
+
     // Parse string messages into an AST.
     var ast = typeof message === 'string' ?
             MessageFormat.__parse(message) : message;
@@ -161,7 +163,7 @@ MessageFormat.prototype.resolvedOptions = function () {
 };
 
 MessageFormat.prototype._compilePattern = function (ast, locales, formats, pluralFn) {
-    var compiler = new Compiler(locales, formats, pluralFn);
+    var compiler = new Compiler(locales, formats, pluralFn, this._compilerOpts);
     return compiler.compile(ast);
 };
 
