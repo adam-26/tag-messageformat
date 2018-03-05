@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.1.1"></a>
+## [3.1.1](https://github.com/adam-26/intl-messageformat/compare/v3.1.0...v3.1.1) (2018-03-05)
+
+
+### Bug Fixes
+
+* **code:** requireOther option ([fde275d](https://github.com/adam-26/intl-messageformat/commit/fde275d))
+* **code:** requireOther option  ([#5](https://github.com/adam-26/intl-messageformat/issues/5)) ([25707af](https://github.com/adam-26/intl-messageformat/commit/25707af))
+* **code:** Syntax ([e5e26f0](https://github.com/adam-26/intl-messageformat/commit/e5e26f0))
+* **code:** Syntax ([#6](https://github.com/adam-26/intl-messageformat/issues/6)) ([14869ac](https://github.com/adam-26/intl-messageformat/commit/14869ac))
+
+
+
 <a name="3.1.0"></a>
 # [3.1.0](https://github.com/adam-26/intl-messageformat/compare/v3.0.0...v3.1.0) (2018-03-05)
 
