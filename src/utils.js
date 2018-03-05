@@ -6,6 +6,8 @@ See the accompanying LICENSE file for terms.
 
 /* jslint esnext: true */
 
+const hasIndexOfMethod = typeof Array.prototype.indexOf === 'function';
+
 export var hop = Object.prototype.hasOwnProperty;
 
 export function extend(obj) {
@@ -36,11 +38,25 @@ export function assertValueProvided(isTag, value, key, id) {
 }
 
 export function existsIn(arr, item) {
-    if (typeof Array.prototype.indexOf === 'function') {
+    if (hasIndexOfMethod) {
         return arr.indexOf(item) !== -1;
     }
 
     // IE8 Support
+    return existsInArray(arr, item);
+}
+
+export function containsChar(str, char) {
+    if (hasIndexOfMethod) {
+        return str.indexOf(char) !== -1;
+    }
+
+    // IE8 Support
+    return existsInArray(str.split(''), char);
+}
+
+// Required for IE8, to avoid need for 'indexOf' polyfill
+function existsInArray(arr, item) {
     for (var i = 0, len = arr.length; i < len; i++) {
         if (arr[i] === item) {
             return true;

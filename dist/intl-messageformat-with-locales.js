@@ -1,5 +1,8 @@
 (function() {
     "use strict";
+
+    const $$utils$$hasIndexOfMethod = typeof Array.prototype.indexOf === 'function';
+
     var $$utils$$hop = Object.prototype.hasOwnProperty;
 
     function $$utils$$extend(obj) {
@@ -30,11 +33,25 @@
     }
 
     function $$utils$$existsIn(arr, item) {
-        if (typeof Array.prototype.indexOf === 'function') {
+        if ($$utils$$hasIndexOfMethod) {
             return arr.indexOf(item) !== -1;
         }
 
         // IE8 Support
+        return $$utils$$existsInArray(arr, item);
+    }
+
+    function $$utils$$containsChar(str, char) {
+        if ($$utils$$hasIndexOfMethod) {
+            return str.indexOf(char) !== -1;
+        }
+
+        // IE8 Support
+        return $$utils$$existsInArray(str.split(''), char);
+    }
+
+    // Required for IE8, to avoid need for 'indexOf' polyfill
+    function $$utils$$existsInArray(arr, item) {
         for (var i = 0, len = arr.length; i < len; i++) {
             if (arr[i] === item) {
                 return true;
@@ -86,11 +103,9 @@
         this.locales  = locales;
         this.formats  = formats;
         this.pluralFn = pluralFn;
-        this.options = {
-            requireOther: (opts && typeof opts.requireOther === 'boolean') ?
-                opts.requireOther :
-                true
-        };
+        this.requireOther = (opts && typeof opts.requireOther === 'boolean') ?
+            opts.requireOther :
+            true;
     }
 
     $$compiler$$Compiler.prototype.compile = function (ast) {
@@ -221,7 +236,7 @@
             options     = format.options,
             optionsHash = {};
 
-        if (this.options.requireOther && !element.hasOther) {
+        if (this.requireOther === true && !element.hasOther) {
             throw new Error(format.type + ' requires an `other` option, this can be disabled.');
         }
 
@@ -291,7 +306,7 @@
         var option = options['=' + value] ||
                 options[this.pluralFn(value - this.offset, this.useOrdinal)];
 
-        return option || options.other;
+        return option || options.other || [];
     };
 
     function $$compiler$$PluralOffsetString(id, offset, numberFormat, string) {
@@ -316,7 +331,7 @@
 
     $$compiler$$SelectFormat.prototype.getOption = function (value) {
         var options = this.options;
-        return options[value] || options.other;
+        return options[value] || options.other || [];
     };
 
     function $$compiler$$TagFormat(id, pattern) {
@@ -2084,8 +2099,6 @@
     // -- MessageFormat --------------------------------------------------------
 
     function $$core$$MessageFormat(message, locales, formats, opts) {
-        this._compilerOpts = opts || {};
-
         // Parse string messages into an AST.
         var ast = typeof message === 'string' ?
                 $$core$$MessageFormat.__parse(message) : message;
@@ -2105,7 +2118,7 @@
         // `format()` invocations. **Note:** This passes the `locales` set provided
         // to the constructor instead of just the resolved locale.
         var pluralFn = this._findPluralRuleFunction(this._locale);
-        var pattern  = this._compilePattern(ast, locales, formats, pluralFn);
+        var pattern  = this._compilePattern(ast, locales, formats, pluralFn, opts);
 
         // "Bind" `format()` method to `this` so it can be passed by reference like
         // the other `Intl` APIs.
@@ -2230,8 +2243,8 @@
         };
     };
 
-    $$core$$MessageFormat.prototype._compilePattern = function (ast, locales, formats, pluralFn) {
-        var compiler = new $$compiler$$default(locales, formats, pluralFn, this._compilerOpts);
+    $$core$$MessageFormat.prototype._compilePattern = function (ast, locales, formats, pluralFn, opts) {
+        var compiler = new $$compiler$$default(locales, formats, pluralFn, opts);
         return compiler.compile(ast);
     };
 
@@ -2271,7 +2284,7 @@
             id = part.id;
 
             // Enforce that all required values are provided by the caller.
-            if (id.indexOf('.') !== -1) {
+            if ($$utils$$containsChar(id, '.')) {
                 var token;
                 var tokens = id.split('.');
                 value = values;

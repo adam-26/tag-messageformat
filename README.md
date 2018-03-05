@@ -15,7 +15,7 @@ Formats ICU Message strings with number, date, plural, and select placeholders t
 _Differences_ from the original package:
  * It uses the [tag-messageformat-parser](github.com/adam-26/intl-messageformat-parser)
  * `Tags` are supported in messages - this is **not** part of the ICU message "spec"
- * The `other` option is **required** for `plural`, `select` and `selectordinal` as is required by other ICU parsers
+ * The `other` option _defaults to required_ for `plural`, `select` and `selectordinal` - as defined in the ICU "spec"
  * Whitespace in `plural` messages is preserved
  * `.` is permitted to be used in argument and tag names
 
@@ -204,7 +204,7 @@ _Note: in Node.js, the data for all 200+ languages is loaded along with the libr
 ### Public API
 
 #### `IntlMessageFormat` Constructor
-To create a message to format, use the `IntlMessageFormat` constructor. The constructor takes three parameters:
+To create a message to format, use the `IntlMessageFormat` constructor. The constructor takes four parameters:
 
  - **message** - _{String | AST}_ - String message (or pre-parsed AST) that serves as formatting pattern.
 
@@ -212,8 +212,13 @@ To create a message to format, use the `IntlMessageFormat` constructor. The cons
 
  - **[formats]** - _{Object}_ - Optional object with user defined options for format styles.
 
+ - **[options]** - _{ requireOther: boolean }_ - Optional object with option to prevent ICU message `other` option arguments. Set this to `false` for backward compatibility with [react-intl](https://github.com/yahoo/intl-messageformat).
+
 ```js
 var msg = new IntlMessageFormat('My name is {name}.', 'en-US');
+
+// Allow plural and select ICU messages to be defined without an `other` option
+var msg = new IntlMessageFormat('My name is {name}.', 'en-US', {}, { requireOther: false });
 ```
 
 #### Locale Resolution
