@@ -1,7 +1,7 @@
 (function() {
     "use strict";
 
-    const $$utils$$hasIndexOfMethod = typeof Array.prototype.indexOf === 'function';
+    var $$utils$$hasIndexOfMethod = typeof Array.prototype.indexOf === 'function';
 
     var $$utils$$hop = Object.prototype.hasOwnProperty;
 
