@@ -47,6 +47,10 @@ export function existsIn(arr, item) {
 }
 
 export function containsChar(str, char) {
+    if (typeof str !== 'string') {
+        return false;
+    }
+
     if (hasIndexOfMethod) {
         return str.indexOf(char) !== -1;
     }
