@@ -188,6 +188,11 @@ describe('IntlMessageFormat', function () {
             var mf = new IntlMessageFormat('My name is {user.name}', 'en');
             expect(mf.format({ user: { name: 'Bob' } })).to.equal('My name is Bob');
         });
+
+        it ('should format with numbered value argument', function () {
+            var mf = new IntlMessageFormat('My name is {0}', 'en');
+            expect(mf.format({ 0: 'Bob' })).to.equal('My name is Bob');
+        });
     });
 
     describe('using a string pattern', function () {

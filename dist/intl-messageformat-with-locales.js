@@ -42,6 +42,10 @@
     }
 
     function $$utils$$containsChar(str, char) {
+        if (typeof str !== 'string') {
+            return false;
+        }
+
         if ($$utils$$hasIndexOfMethod) {
             return str.indexOf(char) !== -1;
         }
