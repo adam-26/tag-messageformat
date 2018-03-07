@@ -2,9 +2,10 @@
 
 'use strict';
 
-var IntlMessageFormat = require('./lib/main')['default'];
-var StringBuilderFactory = require('./lib/messageBuilders').StringBuilderFactory;
-var ArrayBuilderFactory = require('./lib/messageBuilders').ArrayBuilderFactory;
+var main = require('./lib/main');
+var IntlMessageFormat = main['default'];
+var StringBuilderFactory = main.StringBuilderFactory;
+var ArrayBuilderFactory = main.ArrayBuilderFactory;
 
 // Add all locale data to `IntlMessageFormat`. This module will be ignored when
 // bundling for the browser with Browserify/Webpack.

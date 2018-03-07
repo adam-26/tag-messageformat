@@ -68,14 +68,14 @@
     // Purposely using the same implementation as the Intl.js `Intl` polyfill.
     // Copyright 2013 Andy Earnshaw, MIT License
 
-    var $$es5$$realDefineProp = (function () {
+    var $$src$es5$$realDefineProp = (function () {
         try { return !!Object.defineProperty({}, 'a', {}); }
         catch (e) { return false; }
     })();
 
-    var $$es5$$es3 = !$$es5$$realDefineProp && !Object.prototype.__defineGetter__;
+    var $$src$es5$$es3 = !$$src$es5$$realDefineProp && !Object.prototype.__defineGetter__;
 
-    var $$es5$$defineProperty = $$es5$$realDefineProp ? Object.defineProperty :
+    var $$src$es5$$defineProperty = $$src$es5$$realDefineProp ? Object.defineProperty :
             function (obj, name, desc) {
 
         if ('get' in desc && obj.__defineGetter__) {
@@ -85,7 +85,7 @@
         }
     };
 
-    var $$es5$$objCreate = Object.create || function (proto, props) {
+    var $$src$es5$$objCreate = Object.create || function (proto, props) {
         var obj, k;
 
         function F() {}
@@ -94,14 +94,14 @@
 
         for (k in props) {
             if ($$utils$$hop.call(props, k)) {
-                $$es5$$defineProperty(obj, k, props[k]);
+                $$src$es5$$defineProperty(obj, k, props[k]);
             }
         }
 
         return obj;
     };
 
-    var $$es5$$isArray = Array.isArray || function (obj) {
+    var $$src$es5$$isArray = Array.isArray || function (obj) {
         return toString.call(obj) === '[object Array]';
     };
 
@@ -371,8 +371,16 @@
             return;
         }
 
-        if ($$es5$$isArray(element)) {
-            Array.prototype.push.apply(this._elements, element);
+        if ($$src$es5$$isArray(element)) {
+            if (Array.prototype.push.apply) {
+                Array.prototype.push.apply(this._elements, element);
+            } else {
+                // IE 8
+                for (var i = 0, len = element.length; i < len; i++) {
+                    this._elements.push(element);
+                }
+            }
+
         }
         else {
             this._elements.push(element);
@@ -2192,7 +2200,7 @@
         formats = this._mergeFormats($$core$$MessageFormat.formats, formats);
 
         // Defined first because it's used to build the format pattern.
-        $$es5$$defineProperty(this, '_locale',  {value: this._resolveLocale(locales)});
+        $$src$es5$$defineProperty(this, '_locale',  {value: this._resolveLocale(locales)});
 
         // Compile the `ast` to a pattern that is highly optimized for repeated
         // `format()` invocations. **Note:** This passes the `locales` set provided
@@ -2226,7 +2234,7 @@
     // Default format options used as the prototype of the `formats` provided to the
     // constructor. These are used when constructing the internal Intl.NumberFormat
     // and Intl.DateTimeFormat instances.
-    $$es5$$defineProperty($$core$$MessageFormat, 'formats', {
+    $$src$es5$$defineProperty($$core$$MessageFormat, 'formats', {
         enumerable: true,
 
         value: {
@@ -2297,8 +2305,8 @@
     });
 
     // Define internal private properties for dealing with locale data.
-    $$es5$$defineProperty($$core$$MessageFormat, '__localeData__', {value: $$es5$$objCreate(null)});
-    $$es5$$defineProperty($$core$$MessageFormat, '__addLocaleData', {value: function (data) {
+    $$src$es5$$defineProperty($$core$$MessageFormat, '__localeData__', {value: $$src$es5$$objCreate(null)});
+    $$src$es5$$defineProperty($$core$$MessageFormat, '__addLocaleData', {value: function (data) {
         if (!(data && data.locale)) {
             throw new Error(
                 'Locale data provided to IntlMessageFormat is missing a ' +
@@ -2310,11 +2318,11 @@
     }});
 
     // Defines `__parse()` static method as an exposed private.
-    $$es5$$defineProperty($$core$$MessageFormat, '__parse', {value: tag$messageformat$parser$$default.parse});
+    $$src$es5$$defineProperty($$core$$MessageFormat, '__parse', {value: tag$messageformat$parser$$default.parse});
 
     // Define public `defaultLocale` property which defaults to English, but can be
     // set by the developer.
-    $$es5$$defineProperty($$core$$MessageFormat, 'defaultLocale', {
+    $$src$es5$$defineProperty($$core$$MessageFormat, 'defaultLocale', {
         enumerable: true,
         writable  : true,
         value     : undefined
@@ -2406,7 +2414,7 @@
         for (type in defaults) {
             if (!$$utils$$hop.call(defaults, type)) { continue; }
 
-            mergedFormats[type] = mergedType = $$es5$$objCreate(defaults[type]);
+            mergedFormats[type] = mergedType = $$src$es5$$objCreate(defaults[type]);
 
             if (formats && $$utils$$hop.call(formats, type)) {
                 $$utils$$extend(mergedType, formats[type]);
@@ -2458,8 +2466,14 @@
     $$core$$default.__addLocaleData($$en$$default);
     $$core$$default.defaultLocale = 'en';
 
-    var src$main$$default = $$core$$default;
-    this['IntlMessageFormat'] = src$main$$default;
+    var $$src$main$$default = $$core$$default;
+
+    // Define static methods for bundling
+    $$src$es5$$defineProperty($$src$main$$default, 'StringBuilderFactory', {value: $$messageBuilders$$StringBuilderFactory});
+    $$src$es5$$defineProperty($$src$main$$default, 'ArrayBuilderFactory', {value: $$messageBuilders$$ArrayBuilderFactory});
+
+    var nextjs$$default = $$src$main$$default;
+    this['IntlMessageFormat'] = nextjs$$default;
 }).call(this);
 
 //

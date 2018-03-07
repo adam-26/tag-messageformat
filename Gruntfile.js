@@ -79,6 +79,7 @@ module.exports = function (grunt) {
             dest: 'dist/intl-messageformat.js',
 
             options: {
+                main: 'nextjs.js',
                 namespace : 'IntlMessageFormat',
                 sourceRoot: 'intl-messageformat/'
             }
