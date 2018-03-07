@@ -9,6 +9,7 @@ See the accompanying LICENSE file for terms.
 import {extend, hop, assertValueProvided, containsChar} from './utils';
 import {defineProperty, objCreate} from './es5';
 import Compiler from './compiler';
+import {StringBuilderFactory} from './messageBuilders';
 import parser from 'tag-messageformat-parser';
 
 export default MessageFormat;
@@ -40,9 +41,13 @@ function MessageFormat(message, locales, formats, opts) {
     // "Bind" `format()` method to `this` so it can be passed by reference like
     // the other `Intl` APIs.
     var messageFormat = this;
-    this.format = function (values) {
+    this.format = function (values, msgBuilderFactory) {
+      if (typeof msgBuilderFactory !== 'undefined' && typeof msgBuilderFactory !== 'function') {
+          throw new Error('Message `format` builderFactory argument expects a function, but got "' + typeof msgBuilderFactory + '".');
+      }
+
       try {
-        return messageFormat._format(pattern, values);
+        return messageFormat._format(pattern, values, msgBuilderFactory || StringBuilderFactory);
       } catch (e) {
         if (e.variableId) {
           throw new Error(
@@ -185,16 +190,16 @@ MessageFormat.prototype._findPluralRuleFunction = function (locale) {
     );
 };
 
-MessageFormat.prototype._format = function (pattern, values) {
-    var result = '',
-        i, len, part, id, value, err;
+MessageFormat.prototype._format = function (pattern, values, msgBuilderFactory) {
+    var builder = msgBuilderFactory();
+    var i, len, part, id, value;
 
     for (i = 0, len = pattern.length; i < len; i += 1) {
         part = pattern[i];
 
         // Exist early for string parts.
         if (typeof part === 'string') {
-            result += part;
+            builder.appendText(part);
             continue;
         }
 
@@ -221,15 +226,15 @@ MessageFormat.prototype._format = function (pattern, values) {
         // nested pattern structure. The choosing of the option to use is
         // abstracted-by and delegated-to the part helper object.
         if (part.options) {
-            result += this._format(part.getOption(value), values);
+            builder.appendFormattedMessage(this._format(part.getOption(value), values, msgBuilderFactory)); // does this _format ALWAYS need to return a STRING?
         } else if (part.pattern) {
-            result += part.format(value, this._format(part.pattern, values));
+            builder.appendTag(part.format(value, this._format(part.pattern, values, msgBuilderFactory)));
         } else {
-            result += part.format(value);
+            builder.appendSimpleMessage(part.format(value));
         }
     }
 
-    return result;
+    return builder.build();
 };
 
 MessageFormat.prototype._mergeFormats = function (defaults, formats) {

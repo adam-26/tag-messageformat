@@ -1,6 +1,6 @@
 declare class IntlMessageFormat {
     constructor(message: string, locales: string | string[], formats?: any);
-    format(context?: any): string;
+    format(context?: any, messageBuilderFactory?: () => Object): string;
     static defaultLocale: string;
 }
 
