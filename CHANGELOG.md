@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.2.0"></a>
+# [3.2.0](https://github.com/adam-26/intl-messageformat/compare/v3.1.2...v3.2.0) (2018-03-07)
+
+
+### Bug Fixes
+
+* **build:** Enable prevention of sauce lab tests ([7affadd](https://github.com/adam-26/intl-messageformat/commit/7affadd))
+* **build:** Enable prevention of sauce lab tests ([#10](https://github.com/adam-26/intl-messageformat/issues/10)) ([0758959](https://github.com/adam-26/intl-messageformat/commit/0758959))
+* **tests:** Browser tests ([1ccb833](https://github.com/adam-26/intl-messageformat/commit/1ccb833))
+* **tests:** Browser tests  ([#9](https://github.com/adam-26/intl-messageformat/issues/9)) ([492e1d7](https://github.com/adam-26/intl-messageformat/commit/492e1d7))
+
+
+### Features
+
+* **code:** message builder factory ([d943ee0](https://github.com/adam-26/intl-messageformat/commit/d943ee0))
+* **code:** message builder factory ([#8](https://github.com/adam-26/intl-messageformat/issues/8)) ([4c6017f](https://github.com/adam-26/intl-messageformat/commit/4c6017f))
+
+
+
 <a name="3.1.2"></a>
 ## [3.1.2](https://github.com/adam-26/intl-messageformat/compare/v3.1.1...v3.1.2) (2018-03-06)
 
