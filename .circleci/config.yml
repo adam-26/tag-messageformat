@@ -64,7 +64,9 @@ jobs:
           name: "saucelabs"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              ./node_modules/.bin/grunt sauce
+              if [ "${RUN_SAUCE_TESTS}" != "false" ]; then
+                ./node_modules/.bin/grunt sauce
+              fi
             fi
       - deploy:
           name: Maybe Deploy
