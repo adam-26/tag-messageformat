@@ -7,8 +7,7 @@
 /*jshint node:true */
 /*global describe,it,beforeEach,afterEach,expect,IntlMessageFormat */
 'use strict';
-
-var ArrayBuilderFactory = require("../lib/messageBuilders").ArrayBuilderFactory;
+var ArrayBuilderFactory = IntlMessageFormat.ArrayBuilderFactory;
 
 describe('IntlMessageFormat', function () {
     it('should be a function', function () {

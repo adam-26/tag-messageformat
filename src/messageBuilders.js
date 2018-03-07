@@ -23,7 +23,15 @@ ArrayBuilder.prototype.append = function (element) {
     }
 
     if (isArray(element)) {
-        Array.prototype.push.apply(this._elements, element);
+        if (Array.prototype.push.apply) {
+            Array.prototype.push.apply(this._elements, element);
+        } else {
+            // IE 8
+            for (var i = 0, len = element.length; i < len; i++) {
+                this._elements.push(element);
+            }
+        }
+
     }
     else {
         this._elements.push(element);
