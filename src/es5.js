@@ -44,4 +44,8 @@ var objCreate = Object.create || function (proto, props) {
     return obj;
 };
 
-export {defineProperty, objCreate};
+var isArray = Array.isArray || function (obj) {
+    return toString.call(obj) === '[object Array]';
+};
+
+export {defineProperty, objCreate, isArray};

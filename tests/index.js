@@ -8,6 +8,8 @@
 /*global describe,it,beforeEach,afterEach,expect,IntlMessageFormat */
 'use strict';
 
+var ArrayBuilderFactory = require("../lib/messageBuilders").ArrayBuilderFactory;
+
 describe('IntlMessageFormat', function () {
     it('should be a function', function () {
         expect(IntlMessageFormat).to.be.a('function');
@@ -23,6 +25,33 @@ describe('IntlMessageFormat', function () {
 
     // INSTANCE METHODS
 
+    var pluralMsg = '' +
+        'I have {numPeople, plural,' +
+        '=0 {zero points}' +
+        'one {a point}' +
+        '}.';
+
+    it ('should throw when `other` is missing from plural message', function () {
+        function createMf() {
+            new IntlMessageFormat(pluralMsg, 'en');
+        }
+
+        expect(createMf).to.throwException(function (e) {
+            expect(e).to.be.an(Error);
+            expect(e.message).to.match(/pluralFormat requires an `other` option, this can be disabled./);
+        });
+    });
+
+    it ('should throw when `other` is required but missing from plural message', function () {
+        function createMf() {
+            new IntlMessageFormat(pluralMsg, 'en', {}, { requireOther: true });
+        }
+
+        expect(createMf).to.throwException(function (e) {
+            expect(e).to.be.an(Error);
+            expect(e.message).to.match(/pluralFormat requires an `other` option, this can be disabled./);
+        });
+    });
 
     it ('should throw when tag and argument uses same id/name value', function () {
         function createMf() {
@@ -112,12 +141,6 @@ describe('IntlMessageFormat', function () {
     });
 
     describe('#format( [object] )', function () {
-        var pluralMsg = '' +
-            'I have {numPeople, plural,' +
-            '=0 {zero points}' +
-            'one {a point}' +
-            '}.';
-
         it('should be a function', function () {
             var mf = new IntlMessageFormat('');
             expect(mf.format).to.be.a('function');
@@ -152,25 +175,15 @@ describe('IntlMessageFormat', function () {
             });
         });
 
-        it ('should throw when `other` is missing from the message', function () {
+        it ('should throw when message builder is not a function', function () {
             function createMf() {
-                new IntlMessageFormat(pluralMsg, 'en');
+                var mf = new IntlMessageFormat("<x:product.link>click</x:product.link>");
+                mf.format({ product: {} }, 'invalid');
             }
 
             expect(createMf).to.throwException(function (e) {
                 expect(e).to.be.an(Error);
-                expect(e.message).to.match(/pluralFormat requires an `other` option, this can be disabled./);
-            });
-        });
-
-        it ('should throw when `other` is required but missing from the message', function () {
-            function createMf() {
-                new IntlMessageFormat(pluralMsg, 'en', {}, { requireOther: true });
-            }
-
-            expect(createMf).to.throwException(function (e) {
-                expect(e).to.be.an(Error);
-                expect(e.message).to.match(/pluralFormat requires an `other` option, this can be disabled./);
+                expect(e.message).to.match(/Message `format` builderFactory argument expects a function, but got "string"./);
             });
         });
 
@@ -224,6 +237,16 @@ describe('IntlMessageFormat', function () {
             });
 
             expect(output).to.equal('');
+        });
+
+        it('should return array', function () {
+            var mf = new IntlMessageFormat('My name is {FIRST} {LAST}.');
+            var output = mf.format({
+                FIRST: 'Anthony',
+                LAST : 'Pipkin'
+            }, ArrayBuilderFactory);
+
+            expect(output).to.eql(['My name is ', 'Anthony', ' ', 'Pipkin', '.']);
         });
     });
 
@@ -471,122 +494,246 @@ describe('IntlMessageFormat', function () {
             expect(IntlMessageFormat.__parse).withArgs(msg).to.not.throwException();
         });
 
-        it('should use ordinal pluralization rules', function () {
-            var mf = new IntlMessageFormat(msg, 'en');
+        describe('StringBuilder', function() {
+            it('should use ordinal pluralization rules', function () {
+                var mf = new IntlMessageFormat(msg, 'en');
 
-            expect(mf.format({year: 1})).to.equal('This is my 1st birthday.');
-            expect(mf.format({year: 2})).to.equal('This is my 2nd birthday.');
-            expect(mf.format({year: 3})).to.equal('This is my 3rd birthday.');
-            expect(mf.format({year: 4})).to.equal('This is my 4th birthday.');
-            expect(mf.format({year: 11})).to.equal('This is my 11th birthday.');
-            expect(mf.format({year: 21})).to.equal('This is my 21st birthday.');
-            expect(mf.format({year: 22})).to.equal('This is my 22nd birthday.');
-            expect(mf.format({year: 33})).to.equal('This is my 33rd birthday.');
-            expect(mf.format({year: 44})).to.equal('This is my 44th birthday.');
-            expect(mf.format({year: 1024})).to.equal('This is my 1,024th birthday.');
+                expect(mf.format({year: 1})).to.equal('This is my 1st birthday.');
+                expect(mf.format({year: 2})).to.equal('This is my 2nd birthday.');
+                expect(mf.format({year: 3})).to.equal('This is my 3rd birthday.');
+                expect(mf.format({year: 4})).to.equal('This is my 4th birthday.');
+                expect(mf.format({year: 11})).to.equal('This is my 11th birthday.');
+                expect(mf.format({year: 21})).to.equal('This is my 21st birthday.');
+                expect(mf.format({year: 22})).to.equal('This is my 22nd birthday.');
+                expect(mf.format({year: 33})).to.equal('This is my 33rd birthday.');
+                expect(mf.format({year: 44})).to.equal('This is my 44th birthday.');
+                expect(mf.format({year: 1024})).to.equal('This is my 1,024th birthday.');
+            });
+        });
+
+        describe('ArrayBuilder', function() {
+            it('should use ordinal pluralization rules', function () {
+                var mf = new IntlMessageFormat(msg, 'en');
+
+                expect(mf.format({year: 1}, ArrayBuilderFactory)).to.eql(['This is my ', '1st', ' birthday.']);
+                expect(mf.format({year: 2}, ArrayBuilderFactory)).to.eql(['This is my ', '2nd', ' birthday.']);
+                expect(mf.format({year: 3}, ArrayBuilderFactory)).to.eql(['This is my ', '3rd', ' birthday.']);
+                expect(mf.format({year: 4}, ArrayBuilderFactory)).to.eql(['This is my ', '4th', ' birthday.']);
+                expect(mf.format({year: 11}, ArrayBuilderFactory)).to.eql(['This is my ', '11th', ' birthday.']);
+                expect(mf.format({year: 21}, ArrayBuilderFactory)).to.eql(['This is my ', '21st', ' birthday.']);
+                expect(mf.format({year: 22}, ArrayBuilderFactory)).to.eql(['This is my ', '22nd', ' birthday.']);
+                expect(mf.format({year: 33}, ArrayBuilderFactory)).to.eql(['This is my ', '33rd', ' birthday.']);
+                expect(mf.format({year: 44}, ArrayBuilderFactory)).to.eql(['This is my ', '44th', ' birthday.']);
+                expect(mf.format({year: 1024}, ArrayBuilderFactory)).to.eql(['This is my ', '1,024th', ' birthday.']);
+            });
         });
     });
 
     describe('tags', function() {
-        it('should not prevent use of HTML tags', function () {
-            var mf = new IntlMessageFormat("<span>hello</span>");
-            expect(mf.format()).to.equal("<span>hello</span>");
-        });
-
-        it('should replace a single tag placeholder using the variable function', function () {
-            var mf = new IntlMessageFormat("<x:link>click me</x:link>");
-
-            var calls = [];
-            var linkFunc = function (content) {
-                calls.push(arguments);
-                return "<a href='#'>" + content + "</a>";
-            };
-
-            var result = mf.format({link: linkFunc});
-
-            expect(calls).to.have.length(1);
-            expect(calls[0]).to.have.length(1);
-            expect(calls[0][0]).to.eql("click me");
-            expect(result).to.equal("<a href='#'>click me</a>");
-        });
-
-        it('should replace a single tag placeholder with nested tag name', function () {
-            var mf = new IntlMessageFormat("<x:product.link>buy now</x:product.link>");
-
-            var calls = [];
-            var linkFunc = function (content) {
-                calls.push(arguments);
-                return "<a href='#'>" + content + "</a>";
-            };
-
-            var result = mf.format({ product: { link: linkFunc } });
-
-            expect(calls).to.have.length(1);
-            expect(calls[0]).to.have.length(1);
-            expect(calls[0][0]).to.eql("buy now");
-            expect(result).to.equal("<a href='#'>buy now</a>");
-        });
-
-        it('should replace nested tag placeholders using the variable function', function () {
-            var mf = new IntlMessageFormat("<x:link>get a <x:bold>discount</x:bold> now</x:link>");
-
-            var calls = [];
-            var linkFunc = function (content) {
-                calls.push(arguments);
-                return "<a href='#'>" + content + "</a>";
-            };
-
-            var boldFunc = function (content) {
-                calls.push(arguments);
-                return "<b>" + content + "</b>";
-            };
-
-            var result = mf.format({
-                link: linkFunc,
-                bold: boldFunc
+        describe('StringBuilder', function() {
+            it('should not prevent use of HTML tags', function () {
+                var mf = new IntlMessageFormat("<span>hello</span>");
+                expect(mf.format()).to.equal("<span>hello</span>");
             });
 
-            expect(calls).to.have.length(2);
-            expect(calls[0]).to.have.length(1);
-            expect(calls[0][0]).to.eql("discount");
-            expect(calls[1]).to.have.length(1);
-            expect(calls[1][0]).to.eql("get a <b>discount</b> now");
-            expect(result).to.equal("<a href='#'>get a <b>discount</b> now</a>");
+            it('should replace a single tag placeholder using the variable function', function () {
+                var mf = new IntlMessageFormat("<x:link>click me</x:link>");
+
+                var calls = [];
+                var linkFunc = function (content) {
+                    calls.push(arguments);
+                    return "<a href='#'>" + content + "</a>";
+                };
+
+                var result = mf.format({link: linkFunc});
+
+                expect(calls).to.have.length(1);
+                expect(calls[0]).to.have.length(1);
+                expect(calls[0][0]).to.eql("click me");
+                expect(result).to.equal("<a href='#'>click me</a>");
+            });
+
+            it('should replace a single tag placeholder with nested tag name', function () {
+                var mf = new IntlMessageFormat("<x:product.link>buy now</x:product.link>");
+
+                var calls = [];
+                var linkFunc = function (content) {
+                    calls.push(arguments);
+                    return "<a href='#'>" + content + "</a>";
+                };
+
+                var result = mf.format({product: {link: linkFunc}});
+
+                expect(calls).to.have.length(1);
+                expect(calls[0]).to.have.length(1);
+                expect(calls[0][0]).to.eql("buy now");
+                expect(result).to.equal("<a href='#'>buy now</a>");
+            });
+
+            it('should replace nested tag placeholders using the variable function', function () {
+                var mf = new IntlMessageFormat("<x:link>get a <x:bold>discount</x:bold> now</x:link>");
+
+                var calls = [];
+                var linkFunc = function (content) {
+                    calls.push(arguments);
+                    return "<a href='#'>" + content + "</a>";
+                };
+
+                var boldFunc = function (content) {
+                    calls.push(arguments);
+                    return "<b>" + content + "</b>";
+                };
+
+                var result = mf.format({
+                    link: linkFunc,
+                    bold: boldFunc
+                });
+
+                expect(calls).to.have.length(2);
+                expect(calls[0]).to.have.length(1);
+                expect(calls[0][0]).to.eql("discount");
+                expect(calls[1]).to.have.length(1);
+                expect(calls[1][0]).to.eql("get a <b>discount</b> now");
+                expect(result).to.equal("<a href='#'>get a <b>discount</b> now</a>");
+            });
+
+            it('should replace repeated tag placeholders using the variable function', function () {
+                var mf = new IntlMessageFormat("<x:important>privacy</x:important> and <x:important>security</x:important>");
+
+                var calls = [];
+                var importantFunc = function (content) {
+                    calls.push(arguments);
+                    return "<u>" + content + "</u>";
+                };
+
+                var result = mf.format({important: importantFunc});
+
+                expect(calls).to.have.length(2);
+                expect(calls[0]).to.have.length(1);
+                expect(calls[0][0]).to.eql("privacy");
+                expect(calls[1]).to.have.length(1);
+                expect(calls[1][0]).to.eql("security");
+                expect(result).to.equal("<u>privacy</u> and <u>security</u>");
+            });
+
+            it('should replace the self-closing tag using the variable function', function () {
+                var mf = new IntlMessageFormat("<x:emoji />");
+
+                var calls = [];
+                var tagFunc = function () {
+                    calls.push(arguments);
+                    return ":)";
+                };
+
+                var result = mf.format({emoji: tagFunc});
+
+                expect(calls).to.have.length(1);
+                expect(calls[0][0]).to.be(undefined);
+                expect(result).to.equal(":)");
+            });
         });
 
-        it('should replace repeated tag placeholders using the variable function', function () {
-            var mf = new IntlMessageFormat("<x:important>privacy</x:important> and <x:important>security</x:important>");
+        describe('ArrayBuilder', function() {
+            it('should not prevent use of HTML tags', function () {
+                var mf = new IntlMessageFormat("<span>hello</span>");
+                expect(mf.format({}, ArrayBuilderFactory)).to.eql(['<span>hello</span>']);
+            });
 
-            var calls = [];
-            var importantFunc = function (content) {
-                calls.push(arguments);
-                return "<u>" + content + "</u>";
-            };
+            it('should replace a single tag placeholder using the variable function', function () {
+                var mf = new IntlMessageFormat("<x:link>click me</x:link>");
 
-            var result = mf.format({important: importantFunc});
+                var calls = [];
+                var linkFunc = function (children) {
+                    calls.push(arguments);
+                    return ["<a href='#'>", children, "</a>"];
+                };
 
-            expect(calls).to.have.length(2);
-            expect(calls[0]).to.have.length(1);
-            expect(calls[0][0]).to.eql("privacy");
-            expect(calls[1]).to.have.length(1);
-            expect(calls[1][0]).to.eql("security");
-            expect(result).to.equal("<u>privacy</u> and <u>security</u>");
-        });
+                var result = mf.format({link: linkFunc}, ArrayBuilderFactory);
 
-        it('should replace the self-closing tag using the variable function', function () {
-            var mf = new IntlMessageFormat("<x:emoji />");
+                expect(calls).to.have.length(1);
+                expect(calls[0]).to.have.length(1);
+                expect(calls[0][0]).to.eql(["click me"]);
+                expect(result).to.eql(["<a href='#'>", ["click me"], "</a>"]);
+            });
 
-            var calls = [];
-            var tagFunc = function () {
-                calls.push(arguments);
-                return ":)";
-            };
+            it('should replace a single tag placeholder with nested tag name', function () {
+                var mf = new IntlMessageFormat("<x:product.link>buy now</x:product.link>");
 
-            var result = mf.format({emoji: tagFunc});
+                var calls = [];
+                var linkFunc = function (children) {
+                    calls.push(arguments);
+                    return ["<a href='#'>", children, "</a>"];
+                };
 
-            expect(calls).to.have.length(1);
-            expect(calls[0][0]).to.be(undefined);
-            expect(result).to.equal(":)");
+                var result = mf.format({product: {link: linkFunc}}, ArrayBuilderFactory);
+
+                expect(calls).to.have.length(1);
+                expect(calls[0]).to.have.length(1);
+                expect(calls[0][0]).to.eql(["buy now"]);
+                expect(result).to.eql(["<a href='#'>", ["buy now"], "</a>"]);
+            });
+
+            it('should replace nested tag placeholders using the variable function', function () {
+                var mf = new IntlMessageFormat("<x:link>get a <x:bold>discount</x:bold> now</x:link>");
+
+                var calls = [];
+                var linkFunc = function (content) {
+                    calls.push(arguments);
+                    return ["<a href='#'>", content , "</a>"];
+                };
+
+                var boldFunc = function (content) {
+                    calls.push(arguments);
+                    return ["<b>", content, "</b>"];
+                };
+
+                var result = mf.format({
+                    link: linkFunc,
+                    bold: boldFunc
+                }, ArrayBuilderFactory);
+
+                expect(calls).to.have.length(2);
+                expect(calls[0]).to.have.length(1);
+                expect(calls[0][0]).to.eql(["discount"]);
+                expect(calls[1]).to.have.length(1);
+                expect(calls[1][0]).to.eql(["get a ", "<b>", ["discount"], "</b>", " now"]);
+                expect(result).to.eql(["<a href='#'>", [ "get a ", "<b>", ["discount"], "</b>", " now" ], "</a>"]);
+            });
+
+            it('should replace repeated tag placeholders using the variable function', function () {
+                var mf = new IntlMessageFormat("<x:important>privacy</x:important> and <x:important>security</x:important>");
+
+                var calls = [];
+                var importantFunc = function (content) {
+                    calls.push(arguments);
+                    return ["<u>", content, "</u>"];
+                };
+
+                var result = mf.format({important: importantFunc}, ArrayBuilderFactory);
+
+                expect(calls).to.have.length(2);
+                expect(calls[0]).to.have.length(1);
+                expect(calls[0][0]).to.eql(["privacy"]);
+                expect(calls[1]).to.have.length(1);
+                expect(calls[1][0]).to.eql(["security"]);
+                expect(result).to.eql(["<u>", [ "privacy" ], "</u>", " and ", "<u>", [ "security" ], "</u>"]);
+            });
+
+            it('should replace the self-closing tag using the variable function', function () {
+                var mf = new IntlMessageFormat("<x:emoji />");
+
+                var calls = [];
+                var tagFunc = function () {
+                    calls.push(arguments);
+                    return ":)";
+                };
+
+                var result = mf.format({emoji: tagFunc}, ArrayBuilderFactory);
+
+                expect(calls).to.have.length(1);
+                expect(calls[0][0]).to.be(undefined);
+                expect(result).to.eql([":)"]);
+            });
         });
     });
 
