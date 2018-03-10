@@ -10,3 +10,4 @@ npm-shrinkwrap.json
 package-lock.json
 yarn.lock
 nextjs.js
+cc-test-reporter

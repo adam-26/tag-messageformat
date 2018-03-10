@@ -253,16 +253,19 @@ console.log(msg.resolvedOptions().locale); // => "en-US"
 
 Notice how the specified locale was the all lower-case value: `"en-us"`, but it was resolved and normalized to: `"en-US"`.
 
-#### `format(values?: Object, messageBuilderFactory?: MessageBuilderFactory)` Method
+#### `format(values?: Object, formatOptions?: FormatOptions)` Method
 
 Once the message is created, formatting the message is done by calling the `format()` method on the instance and passing a collection of `values`:
 
-Optionally, use a `messageBuilderFactory` to customize the returned format of the message. By default, a `StringBuilderFactory` is used.
+valid options:
+ * `messageBuilderFactory` used to customize the format of the message. By default, a `StringBuilderFactory` is used.
+ * `messsageBuilderContext` the context passed to each `messageBuilder` instance
+
 
 ```js
 import { StringBuilderFactory, ArrayBuilderFactory } from 'tag-messageformat';
 
-var output = msg.format({name: "Eric"}, StringBuilderFactory);
+var output = msg.format({name: "Eric"}, { messageBuilderFactory: StringBuilderFactory });
 console.log(output); // => "My name is Eric."
 ```
 
@@ -324,4 +327,4 @@ License
 -------
 
 This software is free to use under the Yahoo! Inc. BSD license.
-See the [LICENSE file][LICENSE] for license text and copyright information.
+See the [LICENSE file](https://github.com/adam-26/intl-messageformat/blob/master/LICENSE) for license text and copyright information.
