@@ -9,7 +9,7 @@ See the accompanying LICENSE file for terms.
 import {extend, hop, assertValueProvided, containsChar} from './utils';
 import {defineProperty, objCreate} from './es5';
 import Compiler from './compiler';
-import {StringBuilderFactory} from './messageBuilders';
+import {BuilderContext, StringBuilderFactory} from './messageBuilders';
 import parser from 'tag-messageformat-parser';
 
 export default MessageFormat;
@@ -41,13 +41,18 @@ function MessageFormat(message, locales, formats, opts) {
     // "Bind" `format()` method to `this` so it can be passed by reference like
     // the other `Intl` APIs.
     var messageFormat = this;
-    this.format = function (values, msgBuilderFactory) {
-      if (typeof msgBuilderFactory !== 'undefined' && typeof msgBuilderFactory !== 'function') {
-          throw new Error('Message `format` builderFactory argument expects a function, but got "' + typeof msgBuilderFactory + '".');
+    this.format = function (values, formatOpts) {
+      formatOpts = formatOpts || {};
+      var BuilderFactory = formatOpts.messageBuilderFactory || StringBuilderFactory;
+      var builderCtx = formatOpts.messageBuilderContext || new BuilderContext();
+
+      if (formatOpts.messageBuilderFactory && typeof BuilderFactory !== 'function') {
+          throw new Error('Message `format` option `messageBuilderFactory` requires a function.');
       }
 
       try {
-        return messageFormat._format(pattern, values, msgBuilderFactory || StringBuilderFactory);
+        builderCtx.message(message);
+        return builderCtx.formatted(messageFormat._format(pattern, values, builderCtx, BuilderFactory));
       } catch (e) {
         if (e.variableId) {
           throw new Error(
@@ -190,8 +195,8 @@ MessageFormat.prototype._findPluralRuleFunction = function (locale) {
     );
 };
 
-MessageFormat.prototype._format = function (pattern, values, msgBuilderFactory) {
-    var builder = msgBuilderFactory();
+MessageFormat.prototype._format = function (pattern, values, builderCtx, builderFactory) {
+    var builder = builderFactory(builderCtx);
     var i, len, part, id, value;
 
     for (i = 0, len = pattern.length; i < len; i += 1) {
@@ -226,11 +231,11 @@ MessageFormat.prototype._format = function (pattern, values, msgBuilderFactory) 
         // nested pattern structure. The choosing of the option to use is
         // abstracted-by and delegated-to the part helper object.
         if (part.options) {
-            builder.appendFormattedMessage(this._format(part.getOption(value), values, msgBuilderFactory)); // does this _format ALWAYS need to return a STRING?
+            builder.appendFormattedMessage(this._format(part.getOption(value), values, builderCtx, builderFactory), id);
         } else if (part.pattern) {
-            builder.appendTag(part.format(value, this._format(part.pattern, values, msgBuilderFactory)));
+            builder.appendTag(part.format(value, this._format(part.pattern, values, builderCtx, builderFactory)), id);
         } else {
-            builder.appendSimpleMessage(part.format(value));
+            builder.appendSimpleMessage(part.format(value), id);
         }
     }
 
