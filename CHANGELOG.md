@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.3.0"></a>
+# [3.3.0](https://github.com/adam-26/intl-messageformat/compare/v3.2.0...v3.3.0) (2018-03-10)
+
+
+### Features
+
+* **code:** Add message builder context ([9999d07](https://github.com/adam-26/intl-messageformat/commit/9999d07))
+* **code:** Add message builder context ([#11](https://github.com/adam-26/intl-messageformat/issues/11)) ([65fed84](https://github.com/adam-26/intl-messageformat/commit/65fed84))
+
+
+
 <a name="3.2.0"></a>
 # [3.2.0](https://github.com/adam-26/intl-messageformat/compare/v3.1.2...v3.2.0) (2018-03-07)
 
