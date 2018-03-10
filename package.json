@@ -1,6 +1,6 @@
 {
   "name": "tag-messageformat",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "Formats ICU Message strings with number, date, plural, and select placeholders to create localized messages.",
   "keywords": [
     "i18n",

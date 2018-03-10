@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.3.1"></a>
+## [3.3.1](https://github.com/adam-26/intl-messageformat/compare/v3.3.0...v3.3.1) (2018-03-10)
+
+
+### Bug Fixes
+
+* **release:** NPM Package ([6fe7a51](https://github.com/adam-26/intl-messageformat/commit/6fe7a51))
+* **release:** NPM Package ([#12](https://github.com/adam-26/intl-messageformat/issues/12)) ([eb314e0](https://github.com/adam-26/intl-messageformat/commit/eb314e0))
+
+
+
 <a name="3.3.0"></a>
 # [3.3.0](https://github.com/adam-26/intl-messageformat/compare/v3.2.0...v3.3.0) (2018-03-10)
 
