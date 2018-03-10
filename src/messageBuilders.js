@@ -8,12 +8,23 @@ See the accompanying LICENSE file for terms.
 
 import {isArray} from './es5';
 
+export function BuilderContext() {}
+
+BuilderContext.prototype.message = function (/*message*/) {
+    // no-op
+    // other context implementations may utilize the message for other purposes.
+};
+
+BuilderContext.prototype.formatted = function (formattedMessage) {
+    return formattedMessage;
+};
+
 // ===== Array Builder Factory =====
-export function ArrayBuilderFactory() {
-    return new ArrayBuilder();
+export function ArrayBuilderFactory(/* builderCtx */) {
+    return new ArrayBuilder(/* builderCtx */);
 }
 
-export function ArrayBuilder() {
+export function ArrayBuilder(/* builderCtx */) {
     this._elements = [];
 }
 
@@ -42,15 +53,15 @@ ArrayBuilder.prototype.appendText = function (elements) {
     return this.append(elements);
 };
 
-ArrayBuilder.prototype.appendSimpleMessage = function (elements) {
+ArrayBuilder.prototype.appendSimpleMessage = function (elements/*, argName*/) {
     return this.append(elements);
 };
 
-ArrayBuilder.prototype.appendFormattedMessage = function (elements) {
+ArrayBuilder.prototype.appendFormattedMessage = function (elements/*, argName*/) {
     return this.append(elements);
 };
 
-ArrayBuilder.prototype.appendTag = function (elements) {
+ArrayBuilder.prototype.appendTag = function (elements/*, tagName*/) {
     return this.append(elements);
 };
 
@@ -59,11 +70,11 @@ ArrayBuilder.prototype.build = function () {
 };
 
 // ===== String Builder Factory =====
-export function StringBuilderFactory() {
-    return new StringBuilder();
+export function StringBuilderFactory(/* builderCtx */) {
+    return new StringBuilder(/* builderCtx */);
 }
 
-export function StringBuilder() {
+export function StringBuilder(/* builderCtx */) {
     this._str = '';
 }
 
@@ -75,15 +86,15 @@ StringBuilder.prototype.appendText = function (text) {
     return this.append(text);
 };
 
-StringBuilder.prototype.appendSimpleMessage = function (text) {
+StringBuilder.prototype.appendSimpleMessage = function (text/*, argName*/) {
     return this.append(text);
 };
 
-StringBuilder.prototype.appendFormattedMessage = function (text) {
+StringBuilder.prototype.appendFormattedMessage = function (text/*, argName*/) {
     return this.append(text);
 };
 
-StringBuilder.prototype.appendTag = function (text) {
+StringBuilder.prototype.appendTag = function (text/*, tagName*/) {
     return this.append(text);
 };
 

@@ -174,15 +174,15 @@ describe('IntlMessageFormat', function () {
             });
         });
 
-        it ('should throw when message builder is not a function', function () {
+        it ('should throw when `messageBuilderFactory` is not a function', function () {
             function createMf() {
                 var mf = new IntlMessageFormat("<x:product.link>click</x:product.link>");
-                mf.format({ product: {} }, 'invalid');
+                mf.format({ product: {} }, { messageBuilderFactory: 'invalid' });
             }
 
             expect(createMf).to.throwException(function (e) {
                 expect(e).to.be.an(Error);
-                expect(e.message).to.match(/Message `format` builderFactory argument expects a function, but got "string"./);
+                expect(e.message).to.match(/Message `format` option `messageBuilderFactory` requires a function./);
             });
         });
 
@@ -243,7 +243,7 @@ describe('IntlMessageFormat', function () {
             var output = mf.format({
                 FIRST: 'Anthony',
                 LAST : 'Pipkin'
-            }, ArrayBuilderFactory);
+            }, { messageBuilderFactory: ArrayBuilderFactory });
 
             expect(output).to.eql(['My name is ', 'Anthony', ' ', 'Pipkin', '.']);
         });
@@ -514,16 +514,16 @@ describe('IntlMessageFormat', function () {
             it('should use ordinal pluralization rules', function () {
                 var mf = new IntlMessageFormat(msg, 'en');
 
-                expect(mf.format({year: 1}, ArrayBuilderFactory)).to.eql(['This is my ', '1st', ' birthday.']);
-                expect(mf.format({year: 2}, ArrayBuilderFactory)).to.eql(['This is my ', '2nd', ' birthday.']);
-                expect(mf.format({year: 3}, ArrayBuilderFactory)).to.eql(['This is my ', '3rd', ' birthday.']);
-                expect(mf.format({year: 4}, ArrayBuilderFactory)).to.eql(['This is my ', '4th', ' birthday.']);
-                expect(mf.format({year: 11}, ArrayBuilderFactory)).to.eql(['This is my ', '11th', ' birthday.']);
-                expect(mf.format({year: 21}, ArrayBuilderFactory)).to.eql(['This is my ', '21st', ' birthday.']);
-                expect(mf.format({year: 22}, ArrayBuilderFactory)).to.eql(['This is my ', '22nd', ' birthday.']);
-                expect(mf.format({year: 33}, ArrayBuilderFactory)).to.eql(['This is my ', '33rd', ' birthday.']);
-                expect(mf.format({year: 44}, ArrayBuilderFactory)).to.eql(['This is my ', '44th', ' birthday.']);
-                expect(mf.format({year: 1024}, ArrayBuilderFactory)).to.eql(['This is my ', '1,024th', ' birthday.']);
+                expect(mf.format({year: 1}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '1st', ' birthday.']);
+                expect(mf.format({year: 2}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '2nd', ' birthday.']);
+                expect(mf.format({year: 3}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '3rd', ' birthday.']);
+                expect(mf.format({year: 4}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '4th', ' birthday.']);
+                expect(mf.format({year: 11}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '11th', ' birthday.']);
+                expect(mf.format({year: 21}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '21st', ' birthday.']);
+                expect(mf.format({year: 22}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '22nd', ' birthday.']);
+                expect(mf.format({year: 33}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '33rd', ' birthday.']);
+                expect(mf.format({year: 44}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '44th', ' birthday.']);
+                expect(mf.format({year: 1024}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '1,024th', ' birthday.']);
             });
         });
     });
@@ -635,7 +635,7 @@ describe('IntlMessageFormat', function () {
         describe('ArrayBuilder', function() {
             it('should not prevent use of HTML tags', function () {
                 var mf = new IntlMessageFormat("<span>hello</span>");
-                expect(mf.format({}, ArrayBuilderFactory)).to.eql(['<span>hello</span>']);
+                expect(mf.format({}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['<span>hello</span>']);
             });
 
             it('should replace a single tag placeholder using the variable function', function () {
@@ -647,7 +647,7 @@ describe('IntlMessageFormat', function () {
                     return ["<a href='#'>", children, "</a>"];
                 };
 
-                var result = mf.format({link: linkFunc}, ArrayBuilderFactory);
+                var result = mf.format({link: linkFunc}, { messageBuilderFactory: ArrayBuilderFactory });
 
                 expect(calls).to.have.length(1);
                 expect(calls[0]).to.have.length(1);
@@ -664,7 +664,7 @@ describe('IntlMessageFormat', function () {
                     return ["<a href='#'>", children, "</a>"];
                 };
 
-                var result = mf.format({product: {link: linkFunc}}, ArrayBuilderFactory);
+                var result = mf.format({product: {link: linkFunc}}, { messageBuilderFactory: ArrayBuilderFactory });
 
                 expect(calls).to.have.length(1);
                 expect(calls[0]).to.have.length(1);
@@ -689,7 +689,7 @@ describe('IntlMessageFormat', function () {
                 var result = mf.format({
                     link: linkFunc,
                     bold: boldFunc
-                }, ArrayBuilderFactory);
+                }, { messageBuilderFactory: ArrayBuilderFactory });
 
                 expect(calls).to.have.length(2);
                 expect(calls[0]).to.have.length(1);
@@ -708,7 +708,7 @@ describe('IntlMessageFormat', function () {
                     return ["<u>", content, "</u>"];
                 };
 
-                var result = mf.format({important: importantFunc}, ArrayBuilderFactory);
+                var result = mf.format({important: importantFunc}, { messageBuilderFactory: ArrayBuilderFactory });
 
                 expect(calls).to.have.length(2);
                 expect(calls[0]).to.have.length(1);
@@ -727,13 +727,157 @@ describe('IntlMessageFormat', function () {
                     return ":)";
                 };
 
-                var result = mf.format({emoji: tagFunc}, ArrayBuilderFactory);
+                var result = mf.format({emoji: tagFunc}, { messageBuilderFactory: ArrayBuilderFactory });
 
                 expect(calls).to.have.length(1);
                 expect(calls[0][0]).to.be(undefined);
                 expect(result).to.eql([":)"]);
             });
         });
+
+        describe('messageBuilderContext', function() {
+
+            function TestContext() { this._calls = []; }
+            TestContext.prototype.message = function(msg) {
+                this._message = msg;
+            };
+            TestContext.prototype.formatted = function(msg) {
+                this._formatted = msg;
+                return msg;
+            };
+            TestContext.prototype.appendCall = function(args) {
+                this._calls.push(args);
+            };
+
+            function TestBuilder(builderCtx) {
+                this._ctx = builderCtx;
+                this._str = '';
+            }
+
+            TestBuilder.prototype.append = function (text) {
+                this._str += (text || '');
+            };
+
+            TestBuilder.prototype.appendText = function (text) {
+                this._ctx.appendCall(['appendText', text]);
+                return this.append(text);
+            };
+
+            TestBuilder.prototype.appendSimpleMessage = function (text, argName) {
+                this._ctx.appendCall(['appendSimpleMessage', text, argName]);
+                return this.append(text);
+            };
+
+            TestBuilder.prototype.appendFormattedMessage = function (text, argName) {
+                this._ctx.appendCall(['appendFormattedMessage', text, argName]);
+                return this.append(text);
+            };
+
+            TestBuilder.prototype.appendTag = function (text, tagName) {
+                this._ctx.appendCall(['appendTag', text, tagName]);
+                return this.append(text);
+            };
+
+            TestBuilder.prototype.build = function () {
+                this._ctx.appendCall(['build']);
+                return this._str;
+            };
+
+            it('should be assigned the message values', function () {
+                var mf = new IntlMessageFormat("hello world");
+                var ctx = new TestContext();
+                var result = mf.format({}, {
+                    messageBuilderContext: ctx
+                });
+
+                expect(ctx._message).to.equal('hello world');
+                expect(ctx._formatted).to.equal('hello world');
+                expect(ctx._formatted).to.equal(result);
+            });
+
+            it('should receive text calls from message builder', function () {
+                var mf = new IntlMessageFormat("hello world");
+                var ctx = new TestContext();
+                var result = mf.format({}, {
+                    messageBuilderContext: ctx,
+                    messageBuilderFactory: function (ctx) { return new TestBuilder(ctx); }
+                });
+
+                expect(result).to.equal('hello world');
+                expect(ctx._calls.length).to.equal(2);
+                expect(ctx._calls[0][0]).to.equal('appendText');
+                expect(ctx._calls[0][1]).to.equal('hello world');
+
+                expect(ctx._calls[1][0]).to.equal('build');
+            });
+
+            it('should receive simpleMessage calls from message builder', function () {
+                var mf = new IntlMessageFormat("hello {name}");
+                var ctx = new TestContext();
+                var result = mf.format({ name: 'world' }, {
+                    messageBuilderContext: ctx,
+                    messageBuilderFactory: function (ctx) { return new TestBuilder(ctx); }
+                });
+
+                expect(result).to.equal('hello world');
+                expect(ctx._calls.length).to.equal(3);
+                expect(ctx._calls[0][0]).to.equal('appendText');
+                expect(ctx._calls[0][1]).to.equal('hello ');
+
+                expect(ctx._calls[1][0]).to.equal('appendSimpleMessage');
+                expect(ctx._calls[1][1]).to.equal('world');
+                expect(ctx._calls[1][2]).to.equal('name');
+
+                expect(ctx._calls[2][0]).to.equal('build');
+            });
+
+            it('should receive formattedMessage calls from message builder', function () {
+                var mf = new IntlMessageFormat("{question, select, yes {true} other {false}}");
+                var ctx = new TestContext();
+                var result = mf.format({ question: 'yes' }, {
+                    messageBuilderContext: ctx,
+                    messageBuilderFactory: function (ctx) { return new TestBuilder(ctx); }
+                });
+
+                expect(result).to.equal('true');
+                expect(ctx._calls.length).to.equal(4);
+
+                expect(ctx._calls[0][0]).to.equal('appendText');
+                expect(ctx._calls[0][1]).to.equal('true');
+
+                expect(ctx._calls[1][0]).to.equal('build');
+
+                expect(ctx._calls[2][0]).to.equal('appendFormattedMessage');
+                expect(ctx._calls[2][1]).to.equal('true');
+                expect(ctx._calls[2][2]).to.equal('question');
+
+                expect(ctx._calls[3][0]).to.equal('build');
+            });
+
+            it('should receive appendTag calls from message builder', function () {
+                var mf = new IntlMessageFormat("<x:link>click</x:link>");
+                var ctx = new TestContext();
+                var result = mf.format({ link: function (children) { return '<a>' + children + '</a>'; } }, {
+                    messageBuilderContext: ctx,
+                    messageBuilderFactory: function (ctx) { return new TestBuilder(ctx); }
+                });
+
+                expect(result).to.equal('<a>click</a>');
+                expect(ctx._calls.length).to.equal(4);
+
+                expect(ctx._calls[0][0]).to.equal('appendText');
+                expect(ctx._calls[0][1]).to.equal('click');
+
+                expect(ctx._calls[1][0]).to.equal('build');
+
+                expect(ctx._calls[2][0]).to.equal('appendTag');
+                expect(ctx._calls[2][1]).to.equal('<a>click</a>');
+                expect(ctx._calls[2][2]).to.equal('link');
+
+                expect(ctx._calls[3][0]).to.equal('build');
+            });
+        });
+
     });
 
     describe('exceptions', function () {

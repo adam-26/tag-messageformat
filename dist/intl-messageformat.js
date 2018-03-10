@@ -358,11 +358,22 @@
 
       return value(content);
     };
-    function $$messageBuilders$$ArrayBuilderFactory() {
-        return new $$messageBuilders$$ArrayBuilder();
+    function $$messageBuilders$$BuilderContext() {}
+
+    $$messageBuilders$$BuilderContext.prototype.message = function (/*message*/) {
+        // no-op
+        // other context implementations may utilize the message for other purposes.
+    };
+
+    $$messageBuilders$$BuilderContext.prototype.formatted = function (formattedMessage) {
+        return formattedMessage;
+    };
+
+    function $$messageBuilders$$ArrayBuilderFactory(/* builderCtx */) {
+        return new $$messageBuilders$$ArrayBuilder(/* builderCtx */);
     }
 
-    function $$messageBuilders$$ArrayBuilder() {
+    function $$messageBuilders$$ArrayBuilder(/* builderCtx */) {
         this._elements = [];
     }
 
@@ -391,15 +402,15 @@
         return this.append(elements);
     };
 
-    $$messageBuilders$$ArrayBuilder.prototype.appendSimpleMessage = function (elements) {
+    $$messageBuilders$$ArrayBuilder.prototype.appendSimpleMessage = function (elements/*, argName*/) {
         return this.append(elements);
     };
 
-    $$messageBuilders$$ArrayBuilder.prototype.appendFormattedMessage = function (elements) {
+    $$messageBuilders$$ArrayBuilder.prototype.appendFormattedMessage = function (elements/*, argName*/) {
         return this.append(elements);
     };
 
-    $$messageBuilders$$ArrayBuilder.prototype.appendTag = function (elements) {
+    $$messageBuilders$$ArrayBuilder.prototype.appendTag = function (elements/*, tagName*/) {
         return this.append(elements);
     };
 
@@ -407,11 +418,11 @@
         return this._elements;
     };
 
-    function $$messageBuilders$$StringBuilderFactory() {
-        return new $$messageBuilders$$StringBuilder();
+    function $$messageBuilders$$StringBuilderFactory(/* builderCtx */) {
+        return new $$messageBuilders$$StringBuilder(/* builderCtx */);
     }
 
-    function $$messageBuilders$$StringBuilder() {
+    function $$messageBuilders$$StringBuilder(/* builderCtx */) {
         this._str = '';
     }
 
@@ -423,15 +434,15 @@
         return this.append(text);
     };
 
-    $$messageBuilders$$StringBuilder.prototype.appendSimpleMessage = function (text) {
+    $$messageBuilders$$StringBuilder.prototype.appendSimpleMessage = function (text/*, argName*/) {
         return this.append(text);
     };
 
-    $$messageBuilders$$StringBuilder.prototype.appendFormattedMessage = function (text) {
+    $$messageBuilders$$StringBuilder.prototype.appendFormattedMessage = function (text/*, argName*/) {
         return this.append(text);
     };
 
-    $$messageBuilders$$StringBuilder.prototype.appendTag = function (text) {
+    $$messageBuilders$$StringBuilder.prototype.appendTag = function (text/*, tagName*/) {
         return this.append(text);
     };
 
@@ -2211,13 +2222,18 @@
         // "Bind" `format()` method to `this` so it can be passed by reference like
         // the other `Intl` APIs.
         var messageFormat = this;
-        this.format = function (values, msgBuilderFactory) {
-          if (typeof msgBuilderFactory !== 'undefined' && typeof msgBuilderFactory !== 'function') {
-              throw new Error('Message `format` builderFactory argument expects a function, but got "' + typeof msgBuilderFactory + '".');
+        this.format = function (values, formatOpts) {
+          formatOpts = formatOpts || {};
+          var BuilderFactory = formatOpts.messageBuilderFactory || $$messageBuilders$$StringBuilderFactory;
+          var builderCtx = formatOpts.messageBuilderContext || new $$messageBuilders$$BuilderContext();
+
+          if (formatOpts.messageBuilderFactory && typeof BuilderFactory !== 'function') {
+              throw new Error('Message `format` option `messageBuilderFactory` requires a function.');
           }
 
           try {
-            return messageFormat._format(pattern, values, msgBuilderFactory || $$messageBuilders$$StringBuilderFactory);
+            builderCtx.message(message);
+            return builderCtx.formatted(messageFormat._format(pattern, values, builderCtx, BuilderFactory));
           } catch (e) {
             if (e.variableId) {
               throw new Error(
@@ -2360,8 +2376,8 @@
         );
     };
 
-    $$core$$MessageFormat.prototype._format = function (pattern, values, msgBuilderFactory) {
-        var builder = msgBuilderFactory();
+    $$core$$MessageFormat.prototype._format = function (pattern, values, builderCtx, builderFactory) {
+        var builder = builderFactory(builderCtx);
         var i, len, part, id, value;
 
         for (i = 0, len = pattern.length; i < len; i += 1) {
@@ -2396,11 +2412,11 @@
             // nested pattern structure. The choosing of the option to use is
             // abstracted-by and delegated-to the part helper object.
             if (part.options) {
-                builder.appendFormattedMessage(this._format(part.getOption(value), values, msgBuilderFactory)); // does this _format ALWAYS need to return a STRING?
+                builder.appendFormattedMessage(this._format(part.getOption(value), values, builderCtx, builderFactory), id);
             } else if (part.pattern) {
-                builder.appendTag(part.format(value, this._format(part.pattern, values, msgBuilderFactory)));
+                builder.appendTag(part.format(value, this._format(part.pattern, values, builderCtx, builderFactory)), id);
             } else {
-                builder.appendSimpleMessage(part.format(value));
+                builder.appendSimpleMessage(part.format(value), id);
             }
         }
 
