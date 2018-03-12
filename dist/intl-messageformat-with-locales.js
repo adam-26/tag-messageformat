@@ -105,7 +105,7 @@
         return toString.call(obj) === '[object Array]';
     };
 
-    function $$compilerUtil$$StringFormatFactory(id) {
+    function $$compilerUtil$$stringFormatFactory(id) {
         return new $$compilerUtil$$StringFormat(id);
     }
 
@@ -133,7 +133,7 @@
         this.requireOther = (opts && typeof opts.requireOther === 'boolean') ?
             opts.requireOther :
             true;
-        this.stringFormatFactory = (opts && opts.stringFormatFactory) || $$compilerUtil$$StringFormatFactory;
+        this.stringFormatFactory = (opts && opts.stringFormatFactory) || $$compilerUtil$$stringFormatFactory;
     }
 
     $$compiler$$Compiler.prototype.compile = function (ast) {
@@ -377,7 +377,7 @@
         return formattedMessage;
     };
 
-    function $$messageBuilders$$ArrayBuilderFactory(/* builderCtx */) {
+    function $$messageBuilders$$arrayBuilderFactory(/* builderCtx */) {
         return new $$messageBuilders$$ArrayBuilder(/* builderCtx */);
     }
 
@@ -426,7 +426,7 @@
         return this._elements;
     };
 
-    function $$messageBuilders$$StringBuilderFactory(/* builderCtx */) {
+    function $$messageBuilders$$stringBuilderFactory(/* builderCtx */) {
         return new $$messageBuilders$$StringBuilder(/* builderCtx */);
     }
 
@@ -2232,7 +2232,7 @@
         var messageFormat = this;
         this.format = function (values, formatOpts) {
           formatOpts = formatOpts || {};
-          var BuilderFactory = formatOpts.messageBuilderFactory || $$messageBuilders$$StringBuilderFactory;
+          var BuilderFactory = formatOpts.messageBuilderFactory || $$messageBuilders$$stringBuilderFactory;
           var builderCtx = formatOpts.messageBuilderContext || new $$messageBuilders$$BuilderContext();
 
           if (formatOpts.messageBuilderFactory && typeof BuilderFactory !== 'function') {
@@ -2493,9 +2493,9 @@
     var $$src$main$$default = $$core$$default;
 
     // Define static methods for bundling
-    $$src$es5$$defineProperty($$src$main$$default, 'StringBuilderFactory', {value: $$messageBuilders$$StringBuilderFactory});
-    $$src$es5$$defineProperty($$src$main$$default, 'ArrayBuilderFactory', {value: $$messageBuilders$$ArrayBuilderFactory});
-    $$src$es5$$defineProperty($$src$main$$default, 'StringFormatFactory', {value: $$compilerUtil$$StringFormatFactory});
+    $$src$es5$$defineProperty($$src$main$$default, 'stringBuilderFactory', {value: $$messageBuilders$$stringBuilderFactory});
+    $$src$es5$$defineProperty($$src$main$$default, 'arrayBuilderFactory', {value: $$messageBuilders$$arrayBuilderFactory});
+    $$src$es5$$defineProperty($$src$main$$default, 'stringFormatFactory', {value: $$compilerUtil$$stringFormatFactory});
     $$src$es5$$defineProperty($$src$main$$default, 'StringFormat', {value: $$compilerUtil$$StringFormat});
     $$src$es5$$defineProperty($$src$main$$default, 'BuilderContext', {value: $$messageBuilders$$BuilderContext});
 

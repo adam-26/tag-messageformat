@@ -7,7 +7,7 @@ See the accompanying LICENSE file for terms.
 /* jslint esnext: true */
 
 import {existsIn} from './utils';
-import {StringFormatFactory} from './compilerUtil';
+import {stringFormatFactory} from './compilerUtil';
 
 export default Compiler;
 
@@ -18,7 +18,7 @@ function Compiler(locales, formats, pluralFn, opts) {
     this.requireOther = (opts && typeof opts.requireOther === 'boolean') ?
         opts.requireOther :
         true;
-    this.stringFormatFactory = (opts && opts.stringFormatFactory) || StringFormatFactory;
+    this.stringFormatFactory = (opts && opts.stringFormatFactory) || stringFormatFactory;
 }
 
 Compiler.prototype.compile = function (ast) {
