@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.5.1"></a>
+## [3.5.1](https://github.com/adam-26/intl-messageformat/compare/v3.5.0...v3.5.1) (2018-03-12)
+
+
+### Bug Fixes
+
+* **code:** Exports ([3e98000](https://github.com/adam-26/intl-messageformat/commit/3e98000))
+* **code:** Exports ([#15](https://github.com/adam-26/intl-messageformat/issues/15)) ([21ca855](https://github.com/adam-26/intl-messageformat/commit/21ca855))
+
+
+
 <a name="3.5.0"></a>
 # [3.5.0](https://github.com/adam-26/intl-messageformat/compare/v3.4.0...v3.5.0) (2018-03-12)
 
