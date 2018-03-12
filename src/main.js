@@ -2,7 +2,7 @@
 
 import IntlMessageFormat from './core';
 import defaultLocale from './en';
-import {StringBuilderFactory, ArrayBuilderFactory} from './messageBuilders';
+import {StringBuilderFactory, ArrayBuilderFactory, BuilderContext} from './messageBuilders';
 import {StringFormatFactory, StringFormat} from './compilerUtil';
 
 IntlMessageFormat.__addLocaleData(defaultLocale);
@@ -13,5 +13,6 @@ export {
     StringBuilderFactory,
     ArrayBuilderFactory,
     StringFormatFactory,
-    StringFormat
+    StringFormat,
+    BuilderContext
 };
