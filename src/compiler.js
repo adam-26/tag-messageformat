@@ -7,6 +7,7 @@ See the accompanying LICENSE file for terms.
 /* jslint esnext: true */
 
 import {existsIn} from './utils';
+import {StringFormatFactory} from './compilerUtil';
 
 export default Compiler;
 
@@ -17,6 +18,7 @@ function Compiler(locales, formats, pluralFn, opts) {
     this.requireOther = (opts && typeof opts.requireOther === 'boolean') ?
         opts.requireOther :
         true;
+    this.stringFormatFactory = (opts && opts.stringFormatFactory) || StringFormatFactory;
 }
 
 Compiler.prototype.compile = function (ast) {
@@ -97,7 +99,7 @@ Compiler.prototype.compileArgument = function (element) {
     var format = element.format;
 
     if (!format) {
-        return new StringFormat(element.id);
+        return this.stringFormatFactory(element.id);
     }
 
     var formats  = this.formats,
@@ -190,18 +192,6 @@ Compiler.prototype.compileSelfClosingTag = function (element) {
 };
 
 // -- Compiler Helper Classes --------------------------------------------------
-
-function StringFormat(id) {
-    this.id = id;
-}
-
-StringFormat.prototype.format = function (value) {
-    if (!value && typeof value !== 'number') {
-        return '';
-    }
-
-    return typeof value === 'string' ? value : String(value);
-};
 
 function PluralFormat(id, useOrdinal, offset, options, pluralFn) {
     this.id         = id;
