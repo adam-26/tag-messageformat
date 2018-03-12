@@ -2495,6 +2495,9 @@
     // Define static methods for bundling
     $$src$es5$$defineProperty($$src$main$$default, 'StringBuilderFactory', {value: $$messageBuilders$$StringBuilderFactory});
     $$src$es5$$defineProperty($$src$main$$default, 'ArrayBuilderFactory', {value: $$messageBuilders$$ArrayBuilderFactory});
+    $$src$es5$$defineProperty($$src$main$$default, 'StringFormatFactory', {value: $$compilerUtil$$StringFormatFactory});
+    $$src$es5$$defineProperty($$src$main$$default, 'StringFormat', {value: $$compilerUtil$$StringFormat});
+    $$src$es5$$defineProperty($$src$main$$default, 'BuilderContext', {value: $$messageBuilders$$BuilderContext});
 
     var nextjs$$default = $$src$main$$default;
     this['IntlMessageFormat'] = nextjs$$default;
