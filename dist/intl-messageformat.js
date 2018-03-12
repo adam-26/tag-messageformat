@@ -105,6 +105,25 @@
         return toString.call(obj) === '[object Array]';
     };
 
+    function $$compilerUtil$$StringFormatFactory(id) {
+        return new $$compilerUtil$$StringFormat(id);
+    }
+
+    function $$compilerUtil$$StringFormat(id) {
+        this.id = id;
+    }
+
+    $$compilerUtil$$StringFormat.prototype.format = function (value) {
+        if (!value && typeof value !== 'number') {
+            return '';
+        }
+
+        return this.formatValue(value);
+    };
+
+    $$compilerUtil$$StringFormat.prototype.formatValue = function (value) {
+        return typeof value === 'string' ? value : String(value);
+    };
     var $$compiler$$default = $$compiler$$Compiler;
 
     function $$compiler$$Compiler(locales, formats, pluralFn, opts) {
@@ -114,6 +133,7 @@
         this.requireOther = (opts && typeof opts.requireOther === 'boolean') ?
             opts.requireOther :
             true;
+        this.stringFormatFactory = (opts && opts.stringFormatFactory) || $$compilerUtil$$StringFormatFactory;
     }
 
     $$compiler$$Compiler.prototype.compile = function (ast) {
@@ -194,7 +214,7 @@
         var format = element.format;
 
         if (!format) {
-            return new $$compiler$$StringFormat(element.id);
+            return this.stringFormatFactory(element.id);
         }
 
         var formats  = this.formats,
@@ -288,18 +308,6 @@
 
     // -- Compiler Helper Classes --------------------------------------------------
 
-    function $$compiler$$StringFormat(id) {
-        this.id = id;
-    }
-
-    $$compiler$$StringFormat.prototype.format = function (value) {
-        if (!value && typeof value !== 'number') {
-            return '';
-        }
-
-        return typeof value === 'string' ? value : String(value);
-    };
-
     function $$compiler$$PluralFormat(id, useOrdinal, offset, options, pluralFn) {
         this.id         = id;
         this.useOrdinal = useOrdinal;
@@ -378,7 +386,7 @@
     }
 
     $$messageBuilders$$ArrayBuilder.prototype.append = function (element) {
-        if (!element || !element.length) {
+        if (typeof element === 'undefined' || element === null) {
             return;
         }
 

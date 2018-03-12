@@ -212,7 +212,9 @@ To create a message to format, use the `IntlMessageFormat` constructor. The cons
 
  - **[formats]** - _{Object}_ - Optional object with user defined options for format styles.
 
- - **[options]** - _{ requireOther: boolean }_ - Optional object with option to prevent ICU message `other` option arguments. Set this to `false` for backward compatibility with [react-intl](https://github.com/yahoo/intl-messageformat).
+ - **[options]** - _{Object}_
+   * requireOther: boolean - Optional object with option to prevent ICU message `other` option arguments. Set this to `false` for backward compatibility with [react-intl](https://github.com/yahoo/intl-messageformat).
+   * stringFormatFactory: function - Optional factory function for creating `StringFormat` instances - used to format simple argument values.
 
 ```js
 var msg = new IntlMessageFormat('My name is {name}.', 'en-US');

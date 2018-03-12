@@ -29,7 +29,7 @@ export function ArrayBuilder(/* builderCtx */) {
 }
 
 ArrayBuilder.prototype.append = function (element) {
-    if (!element || !element.length) {
+    if (typeof element === 'undefined' || element === null) {
         return;
     }
 
