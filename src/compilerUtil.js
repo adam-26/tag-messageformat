@@ -6,7 +6,7 @@ See the accompanying LICENSE file for terms.
 
 /* jslint esnext: true */
 
-export function StringFormatFactory(id) {
+export function stringFormatFactory(id) {
     return new StringFormat(id);
 }
 

@@ -9,7 +9,7 @@ See the accompanying LICENSE file for terms.
 import {extend, hop, assertValueProvided, containsChar} from './utils';
 import {defineProperty, objCreate} from './es5';
 import Compiler from './compiler';
-import {BuilderContext, StringBuilderFactory} from './messageBuilders';
+import {BuilderContext, stringBuilderFactory} from './messageBuilders';
 import parser from 'tag-messageformat-parser';
 
 export default MessageFormat;
@@ -43,7 +43,7 @@ function MessageFormat(message, locales, formats, opts) {
     var messageFormat = this;
     this.format = function (values, formatOpts) {
       formatOpts = formatOpts || {};
-      var BuilderFactory = formatOpts.messageBuilderFactory || StringBuilderFactory;
+      var BuilderFactory = formatOpts.messageBuilderFactory || stringBuilderFactory;
       var builderCtx = formatOpts.messageBuilderContext || new BuilderContext();
 
       if (formatOpts.messageBuilderFactory && typeof BuilderFactory !== 'function') {

@@ -196,7 +196,7 @@ _Note: All 200+ languages supported by this package use their root BCP 47 langua
 Simply `require()` this package:
 
 ```js
-var IntlMessageFormat, { StringBuilderFactory, ArrayBuilderFactory } = require('tag-messageformat');
+var IntlMessageFormat, { stringBuilderFactory, arrayBuilderFactory } = require('tag-messageformat');
 ```
 
 _Note: in Node.js, the data for all 200+ languages is loaded along with the library._
@@ -260,14 +260,14 @@ Notice how the specified locale was the all lower-case value: `"en-us"`, but it 
 Once the message is created, formatting the message is done by calling the `format()` method on the instance and passing a collection of `values`:
 
 valid options:
- * `messageBuilderFactory` used to customize the format of the message. By default, a `StringBuilderFactory` is used.
+ * `messageBuilderFactory` used to customize the format of the message. By default, a `stringBuilderFactory` is used.
  * `messsageBuilderContext` the context passed to each `messageBuilder` instance
 
 
 ```js
-import { StringBuilderFactory, ArrayBuilderFactory } from 'tag-messageformat';
+import { stringBuilderFactory, arrayBuilderFactory } from 'tag-messageformat';
 
-var output = msg.format({name: "Eric"}, { messageBuilderFactory: StringBuilderFactory });
+var output = msg.format({name: "Eric"}, { messageBuilderFactory: stringBuilderFactory });
 console.log(output); // => "My name is Eric."
 ```
 

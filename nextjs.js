@@ -2,17 +2,17 @@
 
 import {defineProperty} from './src/es5';
 import IntlMessageFormat, {
-    StringBuilderFactory,
-    ArrayBuilderFactory,
-    StringFormatFactory,
+    stringBuilderFactory,
+    arrayBuilderFactory,
+    stringFormatFactory,
     StringFormat,
     BuilderContext
 } from './src/main';
 
 // Define static methods for bundling
-defineProperty(IntlMessageFormat, 'StringBuilderFactory', {value: StringBuilderFactory});
-defineProperty(IntlMessageFormat, 'ArrayBuilderFactory', {value: ArrayBuilderFactory});
-defineProperty(IntlMessageFormat, 'StringFormatFactory', {value: StringFormatFactory});
+defineProperty(IntlMessageFormat, 'stringBuilderFactory', {value: stringBuilderFactory});
+defineProperty(IntlMessageFormat, 'arrayBuilderFactory', {value: arrayBuilderFactory});
+defineProperty(IntlMessageFormat, 'stringFormatFactory', {value: stringFormatFactory});
 defineProperty(IntlMessageFormat, 'StringFormat', {value: StringFormat});
 defineProperty(IntlMessageFormat, 'BuilderContext', {value: BuilderContext});
 

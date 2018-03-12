@@ -4,6 +4,6 @@ if (typeof Intl === 'undefined') {
 
 global.expect = require('expect.js');
 global.IntlMessageFormat = require('../');
-global.ArrayBuilderFactory = require('../').ArrayBuilderFactory;
+global.arrayBuilderFactory = require('../').arrayBuilderFactory;
 
 require('./index');

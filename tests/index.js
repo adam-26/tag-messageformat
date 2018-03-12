@@ -7,7 +7,7 @@
 /*jshint node:true */
 /*global describe,it,beforeEach,afterEach,expect,IntlMessageFormat */
 'use strict';
-var ArrayBuilderFactory = IntlMessageFormat.ArrayBuilderFactory;
+var arrayBuilderFactory = IntlMessageFormat.arrayBuilderFactory;
 
 describe('IntlMessageFormat', function () {
     it('should be a function', function () {
@@ -243,7 +243,7 @@ describe('IntlMessageFormat', function () {
             var output = mf.format({
                 FIRST: 'Anthony',
                 LAST : 'Pipkin'
-            }, { messageBuilderFactory: ArrayBuilderFactory });
+            }, { messageBuilderFactory: arrayBuilderFactory });
 
             expect(output).to.eql(['My name is ', 'Anthony', ' ', 'Pipkin', '.']);
         });
@@ -514,16 +514,16 @@ describe('IntlMessageFormat', function () {
             it('should use ordinal pluralization rules', function () {
                 var mf = new IntlMessageFormat(msg, 'en');
 
-                expect(mf.format({year: 1}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '1st', ' birthday.']);
-                expect(mf.format({year: 2}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '2nd', ' birthday.']);
-                expect(mf.format({year: 3}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '3rd', ' birthday.']);
-                expect(mf.format({year: 4}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '4th', ' birthday.']);
-                expect(mf.format({year: 11}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '11th', ' birthday.']);
-                expect(mf.format({year: 21}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '21st', ' birthday.']);
-                expect(mf.format({year: 22}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '22nd', ' birthday.']);
-                expect(mf.format({year: 33}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '33rd', ' birthday.']);
-                expect(mf.format({year: 44}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '44th', ' birthday.']);
-                expect(mf.format({year: 1024}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['This is my ', '1,024th', ' birthday.']);
+                expect(mf.format({year: 1}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '1st', ' birthday.']);
+                expect(mf.format({year: 2}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '2nd', ' birthday.']);
+                expect(mf.format({year: 3}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '3rd', ' birthday.']);
+                expect(mf.format({year: 4}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '4th', ' birthday.']);
+                expect(mf.format({year: 11}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '11th', ' birthday.']);
+                expect(mf.format({year: 21}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '21st', ' birthday.']);
+                expect(mf.format({year: 22}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '22nd', ' birthday.']);
+                expect(mf.format({year: 33}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '33rd', ' birthday.']);
+                expect(mf.format({year: 44}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '44th', ' birthday.']);
+                expect(mf.format({year: 1024}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '1,024th', ' birthday.']);
             });
         });
     });
@@ -635,7 +635,7 @@ describe('IntlMessageFormat', function () {
         describe('ArrayBuilder', function() {
             it('should not prevent use of HTML tags', function () {
                 var mf = new IntlMessageFormat("<span>hello</span>");
-                expect(mf.format({}, { messageBuilderFactory: ArrayBuilderFactory })).to.eql(['<span>hello</span>']);
+                expect(mf.format({}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['<span>hello</span>']);
             });
 
             it('should replace a single tag placeholder using the variable function', function () {
@@ -647,7 +647,7 @@ describe('IntlMessageFormat', function () {
                     return ["<a href='#'>", children, "</a>"];
                 };
 
-                var result = mf.format({link: linkFunc}, { messageBuilderFactory: ArrayBuilderFactory });
+                var result = mf.format({link: linkFunc}, { messageBuilderFactory: arrayBuilderFactory });
 
                 expect(calls).to.have.length(1);
                 expect(calls[0]).to.have.length(1);
@@ -664,7 +664,7 @@ describe('IntlMessageFormat', function () {
                     return ["<a href='#'>", children, "</a>"];
                 };
 
-                var result = mf.format({product: {link: linkFunc}}, { messageBuilderFactory: ArrayBuilderFactory });
+                var result = mf.format({product: {link: linkFunc}}, { messageBuilderFactory: arrayBuilderFactory });
 
                 expect(calls).to.have.length(1);
                 expect(calls[0]).to.have.length(1);
@@ -689,7 +689,7 @@ describe('IntlMessageFormat', function () {
                 var result = mf.format({
                     link: linkFunc,
                     bold: boldFunc
-                }, { messageBuilderFactory: ArrayBuilderFactory });
+                }, { messageBuilderFactory: arrayBuilderFactory });
 
                 expect(calls).to.have.length(2);
                 expect(calls[0]).to.have.length(1);
@@ -708,7 +708,7 @@ describe('IntlMessageFormat', function () {
                     return ["<u>", content, "</u>"];
                 };
 
-                var result = mf.format({important: importantFunc}, { messageBuilderFactory: ArrayBuilderFactory });
+                var result = mf.format({important: importantFunc}, { messageBuilderFactory: arrayBuilderFactory });
 
                 expect(calls).to.have.length(2);
                 expect(calls[0]).to.have.length(1);
@@ -727,7 +727,7 @@ describe('IntlMessageFormat', function () {
                     return ":)";
                 };
 
-                var result = mf.format({emoji: tagFunc}, { messageBuilderFactory: ArrayBuilderFactory });
+                var result = mf.format({emoji: tagFunc}, { messageBuilderFactory: arrayBuilderFactory });
 
                 expect(calls).to.have.length(1);
                 expect(calls[0][0]).to.be(undefined);

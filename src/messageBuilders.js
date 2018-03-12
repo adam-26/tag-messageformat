@@ -20,7 +20,7 @@ BuilderContext.prototype.formatted = function (formattedMessage) {
 };
 
 // ===== Array Builder Factory =====
-export function ArrayBuilderFactory(/* builderCtx */) {
+export function arrayBuilderFactory(/* builderCtx */) {
     return new ArrayBuilder(/* builderCtx */);
 }
 
@@ -70,7 +70,7 @@ ArrayBuilder.prototype.build = function () {
 };
 
 // ===== String Builder Factory =====
-export function StringBuilderFactory(/* builderCtx */) {
+export function stringBuilderFactory(/* builderCtx */) {
     return new StringBuilder(/* builderCtx */);
 }
 

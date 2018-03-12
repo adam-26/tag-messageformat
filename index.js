@@ -4,9 +4,9 @@
 
 var main = require('./lib/main');
 var IntlMessageFormat = main['default'];
-var StringBuilderFactory = main.StringBuilderFactory;
-var ArrayBuilderFactory = main.ArrayBuilderFactory;
-var StringFormatFactory = main.StringFormatFactory;
+var stringBuilderFactory = main.stringBuilderFactory;
+var arrayBuilderFactory = main.arrayBuilderFactory;
+var stringFormatFactory = main.stringFormatFactory;
 var StringFormat = main.StringFormat;
 var BuilderContext = main.BuilderContext;
 
@@ -19,8 +19,8 @@ require('./lib/locales');
 // the `default` prop for use with other compiled ES6 Modules.
 exports = module.exports = IntlMessageFormat;
 exports['default'] = exports;
-exports.StringBuilderFactory = StringBuilderFactory;
-exports.ArrayBuilderFactory = ArrayBuilderFactory;
-exports.StringFormatFactory = StringFormatFactory;
+exports.stringBuilderFactory = stringBuilderFactory;
+exports.arrayBuilderFactory = arrayBuilderFactory;
+exports.stringFormatFactory = stringFormatFactory;
 exports.StringFormat = StringFormat;
 exports.BuilderContext = BuilderContext;
