@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.6.0"></a>
+# [3.6.0](https://github.com/adam-26/intl-messageformat/compare/v3.5.1...v3.6.0) (2018-03-12)
+
+
+### Features
+
+* **code:** Factory Methods ([f806779](https://github.com/adam-26/intl-messageformat/commit/f806779))
+* **code:** Factory Methods ([#16](https://github.com/adam-26/intl-messageformat/issues/16)) ([597cc21](https://github.com/adam-26/intl-messageformat/commit/597cc21))
+
+
+
 <a name="3.5.1"></a>
 ## [3.5.1](https://github.com/adam-26/intl-messageformat/compare/v3.5.0...v3.5.1) (2018-03-12)
 
