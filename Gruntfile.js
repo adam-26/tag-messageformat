@@ -174,11 +174,12 @@ module.exports = function (grunt) {
                     },
                     throttled: 3,
                     browsers: [
-                        {
-                            browserName: 'internet explorer',
-                            platform: 'Windows 7',
-                            version: '8'
-                        },
+                        // The latest version of `intl` doesn't appear compatible with IE8
+                        // {
+                        //     browserName: 'internet explorer',
+                        //     platform: 'Windows 7',
+                        //     version: '8'
+                        // },
                         {
                             browserName: 'internet explorer',
                             platform: 'Windows 7',
