@@ -1,14 +1,14 @@
 /* jslint esnext: true */
 
-import IntlMessageFormat from './core';
+import TagMessageFormat from './core';
 import defaultLocale from './en';
 import {stringBuilderFactory, arrayBuilderFactory, BuilderContext} from './messageBuilders';
 import {stringFormatFactory, StringFormat} from './compilerUtil';
 
-IntlMessageFormat.__addLocaleData(defaultLocale);
-IntlMessageFormat.defaultLocale = 'en';
+TagMessageFormat.__addLocaleData(defaultLocale);
+TagMessageFormat.defaultLocale = 'en';
 
-export default IntlMessageFormat;
+export default TagMessageFormat;
 export {
     stringBuilderFactory,
     arrayBuilderFactory,

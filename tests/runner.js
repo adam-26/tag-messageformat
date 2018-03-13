@@ -3,7 +3,7 @@ if (typeof Intl === 'undefined') {
 }
 
 global.expect = require('expect.js');
-global.IntlMessageFormat = require('../');
+global.TagMessageFormat = require('../');
 global.arrayBuilderFactory = require('../').arrayBuilderFactory;
 
 require('./index');

@@ -1,4 +1,4 @@
-declare class IntlMessageFormat {
+declare class TagMessageFormat {
     constructor(message: string, locales: string | string[], formats?: any, options?: object);
     format(context?: any, formatOptions?: {
         messageBuilderFactory?: () => Object,
@@ -7,4 +7,4 @@ declare class IntlMessageFormat {
     static defaultLocale: string;
 }
 
-export default IntlMessageFormat;
+export default TagMessageFormat;

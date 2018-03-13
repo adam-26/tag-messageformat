@@ -2,10 +2,10 @@
 
 global.Intl || require('intl');
 
-var IntlMessageFormat = require('../../');
+var tagMessageFormat = require('../../');
 
 var msg = 'Hello, world!';
 
 module.exports = function () {
-    new IntlMessageFormat(msg, 'en-US');
+    new tagMessageFormat(msg, 'en-US');
 };

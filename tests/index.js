@@ -5,20 +5,20 @@
  */
 
 /*jshint node:true */
-/*global describe,it,beforeEach,afterEach,expect,IntlMessageFormat */
+/*global describe,it,beforeEach,afterEach,expect,TagMessageFormat */
 'use strict';
-var arrayBuilderFactory = IntlMessageFormat.arrayBuilderFactory;
+var arrayBuilderFactory = TagMessageFormat.arrayBuilderFactory;
 
-describe('IntlMessageFormat', function () {
+describe('TagMessageFormat', function () {
     it('should be a function', function () {
-        expect(IntlMessageFormat).to.be.a('function');
+        expect(TagMessageFormat).to.be.a('function');
     });
 
     // STATIC
 
     describe('.__addLocaleData( [obj] )', function () {
         it('should respond to .__addLocaleData()', function () {
-            expect(IntlMessageFormat.__addLocaleData).to.be.a('function');
+            expect(TagMessageFormat.__addLocaleData).to.be.a('function');
         });
     });
 
@@ -32,7 +32,7 @@ describe('IntlMessageFormat', function () {
 
     it ('should throw when `other` is missing from plural message', function () {
         function createMf() {
-            new IntlMessageFormat(pluralMsg, 'en');
+            new TagMessageFormat(pluralMsg, 'en');
         }
 
         expect(createMf).to.throwException(function (e) {
@@ -43,7 +43,7 @@ describe('IntlMessageFormat', function () {
 
     it ('should throw when `other` is required but missing from plural message', function () {
         function createMf() {
-            new IntlMessageFormat(pluralMsg, 'en', {}, { requireOther: true });
+            new TagMessageFormat(pluralMsg, 'en', {}, { requireOther: true });
         }
 
         expect(createMf).to.throwException(function (e) {
@@ -54,7 +54,7 @@ describe('IntlMessageFormat', function () {
 
     it ('should throw when tag and argument uses same id/name value', function () {
         function createMf() {
-            new IntlMessageFormat("<x:link>{link}</x:link>");
+            new TagMessageFormat("<x:link>{link}</x:link>");
         }
 
         expect(createMf).to.throwException(function (e) {
@@ -65,7 +65,7 @@ describe('IntlMessageFormat', function () {
 
     it ('should throw when argument and tag uses same id/name value', function () {
         function createMf() {
-            new IntlMessageFormat("{link}<x:link>click</x:link>");
+            new TagMessageFormat("{link}<x:link>click</x:link>");
         }
 
         expect(createMf).to.throwException(function (e) {
@@ -76,17 +76,17 @@ describe('IntlMessageFormat', function () {
 
     describe('#resolvedOptions( )', function () {
         it('should be a function', function () {
-            var mf = new IntlMessageFormat('');
+            var mf = new TagMessageFormat('');
             expect(mf.resolvedOptions).to.be.a('function');
         });
 
         it('should have a `locale` property', function () {
-            var mf = new IntlMessageFormat('');
+            var mf = new TagMessageFormat('');
             expect(mf.resolvedOptions()).to.have.key('locale');
         });
 
         describe('`locale`', function () {
-            var IMFLocaleData = IntlMessageFormat.__localeData__;
+            var IMFLocaleData = TagMessageFormat.__localeData__;
             var localeData    = {};
 
             // Helper to remove and replace the locale data available during the
@@ -94,7 +94,7 @@ describe('IntlMessageFormat', function () {
             function transferLocaleData(from, to) {
                 for (var locale in from) {
                     if (Object.prototype.hasOwnProperty.call(from, locale)) {
-                        if (locale === IntlMessageFormat.defaultLocale) {
+                        if (locale === TagMessageFormat.defaultLocale) {
                             continue;
                         }
 
@@ -113,27 +113,27 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should default to "en"', function () {
-                var mf = new IntlMessageFormat('');
+                var mf = new TagMessageFormat('');
                 expect(mf.resolvedOptions().locale).to.equal('en');
             });
 
             it('should normalize the casing', function () {
                 transferLocaleData(localeData, IMFLocaleData);
 
-                var mf = new IntlMessageFormat('', 'en-us');
+                var mf = new TagMessageFormat('', 'en-us');
                 expect(mf.resolvedOptions().locale).to.equal('en-US');
 
-                mf = new IntlMessageFormat('', 'EN-US');
+                mf = new TagMessageFormat('', 'EN-US');
                 expect(mf.resolvedOptions().locale).to.equal('en-US');
             });
 
             it('should be a fallback value when data is missing', function () {
                 IMFLocaleData.fr = localeData.fr;
 
-                var mf = new IntlMessageFormat('', 'fr-FR');
+                var mf = new TagMessageFormat('', 'fr-FR');
                 expect(mf.resolvedOptions().locale).to.equal('fr');
 
-                mf = new IntlMessageFormat('', 'pt');
+                mf = new TagMessageFormat('', 'pt');
                 expect(mf.resolvedOptions().locale).to.equal('en');
             });
         });
@@ -141,18 +141,18 @@ describe('IntlMessageFormat', function () {
 
     describe('#format( [object] )', function () {
         it('should be a function', function () {
-            var mf = new IntlMessageFormat('');
+            var mf = new TagMessageFormat('');
             expect(mf.format).to.be.a('function');
         });
 
         it('should return a string', function () {
-            var mf = new IntlMessageFormat('');
+            var mf = new TagMessageFormat('');
             expect(mf.format()).to.be.a('string');
         });
 
         it ('should throw when nested argument is missing', function () {
             function createMf() {
-                var mf = new IntlMessageFormat("{product.link}");
+                var mf = new TagMessageFormat("{product.link}");
                 mf.format({ product: {} });
             }
 
@@ -164,7 +164,7 @@ describe('IntlMessageFormat', function () {
 
         it ('should throw when nested tag is missing', function () {
             function createMf() {
-                var mf = new IntlMessageFormat("<x:product.link>click</x:product.link>");
+                var mf = new TagMessageFormat("<x:product.link>click</x:product.link>");
                 mf.format({ product: {} });
             }
 
@@ -176,7 +176,7 @@ describe('IntlMessageFormat', function () {
 
         it ('should throw when `messageBuilderFactory` is not a function', function () {
             function createMf() {
-                var mf = new IntlMessageFormat("<x:product.link>click</x:product.link>");
+                var mf = new TagMessageFormat("<x:product.link>click</x:product.link>");
                 mf.format({ product: {} }, { messageBuilderFactory: 'invalid' });
             }
 
@@ -187,29 +187,29 @@ describe('IntlMessageFormat', function () {
         });
 
         it ('should return formatted message when `other` is missing but not required', function () {
-            var mf = new IntlMessageFormat(pluralMsg, 'en', {}, { requireOther: false });
+            var mf = new TagMessageFormat(pluralMsg, 'en', {}, { requireOther: false });
             expect(mf.format({ numPeople: 0 })).to.equal('I have zero points.');
         });
 
         it ('should return an empty `other` message part when `other` is not required and not defined', function () {
-            var mf = new IntlMessageFormat(pluralMsg, 'en', {}, { requireOther: false });
+            var mf = new TagMessageFormat(pluralMsg, 'en', {}, { requireOther: false });
             expect(mf.format({ numPeople: 10 })).to.equal('I have .');
         });
 
         it ('should format nested object values', function () {
-            var mf = new IntlMessageFormat('My name is {user.name}', 'en');
+            var mf = new TagMessageFormat('My name is {user.name}', 'en');
             expect(mf.format({ user: { name: 'Bob' } })).to.equal('My name is Bob');
         });
 
         it ('should format with numbered value argument', function () {
-            var mf = new IntlMessageFormat('My name is {0}', 'en');
+            var mf = new TagMessageFormat('My name is {0}', 'en');
             expect(mf.format({ 0: 'Bob' })).to.equal('My name is Bob');
         });
     });
 
     describe('using a string pattern', function () {
         it('should properly replace direct arguments in the string', function () {
-            var mf = new IntlMessageFormat('My name is {FIRST} {LAST}.');
+            var mf = new TagMessageFormat('My name is {FIRST} {LAST}.');
             var output = mf.format({
                 FIRST: 'Anthony',
                 LAST : 'Pipkin'
@@ -219,7 +219,7 @@ describe('IntlMessageFormat', function () {
         });
 
         it('should not ignore zero values', function() {
-            var mf = new IntlMessageFormat('I am {age} years old.');
+            var mf = new TagMessageFormat('I am {age} years old.');
             var output = mf.format({
                 age: 0
             });
@@ -228,7 +228,7 @@ describe('IntlMessageFormat', function () {
         });
 
         it('should ignore false, null, and undefined', function() {
-            var mf = new IntlMessageFormat('{a}{b}{c}');
+            var mf = new TagMessageFormat('{a}{b}{c}');
             var output = mf.format({
                 a: false,
                 b: null,
@@ -239,7 +239,7 @@ describe('IntlMessageFormat', function () {
         });
 
         it('should return array', function () {
-            var mf = new IntlMessageFormat('My name is {FIRST} {LAST}.');
+            var mf = new TagMessageFormat('My name is {FIRST} {LAST}.');
             var output = mf.format({
                 FIRST: 'Anthony',
                 LAST : 'Pipkin'
@@ -260,7 +260,7 @@ describe('IntlMessageFormat', function () {
                 'other {some other amount of points}}' +
             '.';
 
-        var msgFmt = new IntlMessageFormat(msg, 'ar');
+        var msgFmt = new TagMessageFormat(msg, 'ar');
 
         it('should match zero', function () {
             var m = msgFmt.format({
@@ -361,27 +361,27 @@ describe('IntlMessageFormat', function () {
         };
 
         it('should format message en-US simple with different objects', function () {
-            var msgFmt = new IntlMessageFormat(simple.en, 'en-US');
+            var msgFmt = new TagMessageFormat(simple.en, 'en-US');
             expect(msgFmt.format(maleObj)).to.equal('Tony went to Paris.');
             expect(msgFmt.format(femaleObj)).to.equal('Jenny went to Paris.');
         });
 
 
         it('should format message fr-FR simple with different objects', function () {
-            var msgFmt = new IntlMessageFormat(simple.fr, 'fr-FR');
+            var msgFmt = new TagMessageFormat(simple.fr, 'fr-FR');
             expect(msgFmt.format(maleObj)).to.equal('Tony est allé à Paris.');
             expect(msgFmt.format(femaleObj)).to.equal('Jenny est allée à Paris.');
         });
 
         it('should format message en-US complex with different objects', function () {
-            var msgFmt = new IntlMessageFormat(complex.en, 'en-US');
+            var msgFmt = new TagMessageFormat(complex.en, 'en-US');
             expect(msgFmt.format(maleTravelers)).to.equal('Lucas, Tony and Drew went to Paris.');
             expect(msgFmt.format(femaleTravelers)).to.equal('Monica went to Paris.');
         });
 
 
         it('should format message fr-FR complex with different objects', function () {
-            var msgFmt = new IntlMessageFormat(complex.fr, 'fr-FR');
+            var msgFmt = new TagMessageFormat(complex.fr, 'fr-FR');
             expect(msgFmt.format(maleTravelers)).to.equal('Lucas, Tony and Drew sont allés à Paris.');
             expect(msgFmt.format(femaleTravelers)).to.equal('Monica est allée à Paris.');
         });
@@ -404,7 +404,7 @@ describe('IntlMessageFormat', function () {
         };
 
         it('should format a message with en-US locale', function () {
-            var msgFmt = new IntlMessageFormat(messages.en, 'en-US');
+            var msgFmt = new TagMessageFormat(messages.en, 'en-US');
 
             expect(msgFmt.format({COMPANY_COUNT: 0})).to.equal('0 companies published new books.');
             expect(msgFmt.format({COMPANY_COUNT: 1})).to.equal('One company published new books.');
@@ -414,7 +414,7 @@ describe('IntlMessageFormat', function () {
         });
 
         it('should format a message with ru-RU locale', function () {
-            var msgFmt = new IntlMessageFormat(messages.ru, 'ru-RU');
+            var msgFmt = new TagMessageFormat(messages.ru, 'ru-RU');
 
             expect(msgFmt.format({COMPANY_COUNT: 0})).to.equal('0 компаний опубликовали новые книги.');
             expect(msgFmt.format({COMPANY_COUNT: 1})).to.equal('Одна компания опубликовала новые книги.');
@@ -428,7 +428,7 @@ describe('IntlMessageFormat', function () {
     describe('arguments with', function () {
 
         describe('no spaces', function() {
-            var msg   = new IntlMessageFormat('{STATE}'),
+            var msg   = new TagMessageFormat('{STATE}'),
                 state = 'Missouri';
 
             it('should fail when the argument in the pattern is not provided', function () {
@@ -455,7 +455,7 @@ describe('IntlMessageFormat', function () {
         });
 
         describe('a numeral', function() {
-            var msg   = new IntlMessageFormat('{ST1ATE}'),
+            var msg   = new TagMessageFormat('{ST1ATE}'),
                 state = 'Missouri';
 
             it('should fail when the argument in the pattern is not provided', function () {
@@ -490,12 +490,12 @@ describe('IntlMessageFormat', function () {
         var msg = 'This is my {year, selectordinal, one{#st} two{#nd} few{#rd} other{#th}} birthday.';
 
         it('should parse without errors', function () {
-            expect(IntlMessageFormat.__parse).withArgs(msg).to.not.throwException();
+            expect(TagMessageFormat.__parse).withArgs(msg).to.not.throwException();
         });
 
         describe('StringBuilder', function() {
             it('should use ordinal pluralization rules', function () {
-                var mf = new IntlMessageFormat(msg, 'en');
+                var mf = new TagMessageFormat(msg, 'en');
 
                 expect(mf.format({year: 1})).to.equal('This is my 1st birthday.');
                 expect(mf.format({year: 2})).to.equal('This is my 2nd birthday.');
@@ -512,7 +512,7 @@ describe('IntlMessageFormat', function () {
 
         describe('ArrayBuilder', function() {
             it('should use ordinal pluralization rules', function () {
-                var mf = new IntlMessageFormat(msg, 'en');
+                var mf = new TagMessageFormat(msg, 'en');
 
                 expect(mf.format({year: 1}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '1st', ' birthday.']);
                 expect(mf.format({year: 2}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['This is my ', '2nd', ' birthday.']);
@@ -531,12 +531,12 @@ describe('IntlMessageFormat', function () {
     describe('tags', function() {
         describe('StringBuilder', function() {
             it('should not prevent use of HTML tags', function () {
-                var mf = new IntlMessageFormat("<span>hello</span>");
+                var mf = new TagMessageFormat("<span>hello</span>");
                 expect(mf.format()).to.equal("<span>hello</span>");
             });
 
             it('should replace a single tag placeholder using the variable function', function () {
-                var mf = new IntlMessageFormat("<x:link>click me</x:link>");
+                var mf = new TagMessageFormat("<x:link>click me</x:link>");
 
                 var calls = [];
                 var linkFunc = function (content) {
@@ -553,7 +553,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should replace a single tag placeholder with nested tag name', function () {
-                var mf = new IntlMessageFormat("<x:product.link>buy now</x:product.link>");
+                var mf = new TagMessageFormat("<x:product.link>buy now</x:product.link>");
 
                 var calls = [];
                 var linkFunc = function (content) {
@@ -570,7 +570,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should replace nested tag placeholders using the variable function', function () {
-                var mf = new IntlMessageFormat("<x:link>get a <x:bold>discount</x:bold> now</x:link>");
+                var mf = new TagMessageFormat("<x:link>get a <x:bold>discount</x:bold> now</x:link>");
 
                 var calls = [];
                 var linkFunc = function (content) {
@@ -597,7 +597,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should replace repeated tag placeholders using the variable function', function () {
-                var mf = new IntlMessageFormat("<x:important>privacy</x:important> and <x:important>security</x:important>");
+                var mf = new TagMessageFormat("<x:important>privacy</x:important> and <x:important>security</x:important>");
 
                 var calls = [];
                 var importantFunc = function (content) {
@@ -616,7 +616,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should replace the self-closing tag using the variable function', function () {
-                var mf = new IntlMessageFormat("<x:emoji />");
+                var mf = new TagMessageFormat("<x:emoji />");
 
                 var calls = [];
                 var tagFunc = function () {
@@ -634,12 +634,12 @@ describe('IntlMessageFormat', function () {
 
         describe('ArrayBuilder', function() {
             it('should not prevent use of HTML tags', function () {
-                var mf = new IntlMessageFormat("<span>hello</span>");
+                var mf = new TagMessageFormat("<span>hello</span>");
                 expect(mf.format({}, { messageBuilderFactory: arrayBuilderFactory })).to.eql(['<span>hello</span>']);
             });
 
             it('should replace a single tag placeholder using the variable function', function () {
-                var mf = new IntlMessageFormat("<x:link>click me</x:link>");
+                var mf = new TagMessageFormat("<x:link>click me</x:link>");
 
                 var calls = [];
                 var linkFunc = function (children) {
@@ -656,7 +656,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should replace a single tag placeholder with nested tag name', function () {
-                var mf = new IntlMessageFormat("<x:product.link>buy now</x:product.link>");
+                var mf = new TagMessageFormat("<x:product.link>buy now</x:product.link>");
 
                 var calls = [];
                 var linkFunc = function (children) {
@@ -673,7 +673,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should replace nested tag placeholders using the variable function', function () {
-                var mf = new IntlMessageFormat("<x:link>get a <x:bold>discount</x:bold> now</x:link>");
+                var mf = new TagMessageFormat("<x:link>get a <x:bold>discount</x:bold> now</x:link>");
 
                 var calls = [];
                 var linkFunc = function (content) {
@@ -700,7 +700,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should replace repeated tag placeholders using the variable function', function () {
-                var mf = new IntlMessageFormat("<x:important>privacy</x:important> and <x:important>security</x:important>");
+                var mf = new TagMessageFormat("<x:important>privacy</x:important> and <x:important>security</x:important>");
 
                 var calls = [];
                 var importantFunc = function (content) {
@@ -719,7 +719,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should replace the self-closing tag using the variable function', function () {
-                var mf = new IntlMessageFormat("<x:emoji />");
+                var mf = new TagMessageFormat("<x:emoji />");
 
                 var calls = [];
                 var tagFunc = function () {
@@ -784,7 +784,7 @@ describe('IntlMessageFormat', function () {
             };
 
             it('should be assigned the message values', function () {
-                var mf = new IntlMessageFormat("hello world");
+                var mf = new TagMessageFormat("hello world");
                 var ctx = new TestContext();
                 var result = mf.format({}, {
                     messageBuilderContext: ctx
@@ -796,7 +796,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should receive text calls from message builder', function () {
-                var mf = new IntlMessageFormat("hello world");
+                var mf = new TagMessageFormat("hello world");
                 var ctx = new TestContext();
                 var result = mf.format({}, {
                     messageBuilderContext: ctx,
@@ -812,7 +812,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should receive simpleMessage calls from message builder', function () {
-                var mf = new IntlMessageFormat("hello {name}");
+                var mf = new TagMessageFormat("hello {name}");
                 var ctx = new TestContext();
                 var result = mf.format({ name: 'world' }, {
                     messageBuilderContext: ctx,
@@ -832,7 +832,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should receive formattedMessage calls from message builder', function () {
-                var mf = new IntlMessageFormat("{question, select, yes {true} other {false}}");
+                var mf = new TagMessageFormat("{question, select, yes {true} other {false}}");
                 var ctx = new TestContext();
                 var result = mf.format({ question: 'yes' }, {
                     messageBuilderContext: ctx,
@@ -855,7 +855,7 @@ describe('IntlMessageFormat', function () {
             });
 
             it('should receive appendTag calls from message builder', function () {
-                var mf = new IntlMessageFormat("<x:link>click</x:link>");
+                var mf = new TagMessageFormat("<x:link>click</x:link>");
                 var ctx = new TestContext();
                 var result = mf.format({ link: function (children) { return '<a>' + children + '</a>'; } }, {
                     messageBuilderContext: ctx,
@@ -883,8 +883,8 @@ describe('IntlMessageFormat', function () {
     describe('exceptions', function () {
         it('should use the correct PT plural rules', function () {
             var msg  = '{num, plural, one{one} other{other}}';
-            var pt   = new IntlMessageFormat(msg, 'pt');
-            var ptMZ = new IntlMessageFormat(msg, 'pt-MZ');
+            var pt   = new TagMessageFormat(msg, 'pt');
+            var ptMZ = new TagMessageFormat(msg, 'pt-MZ');
 
             expect(pt.format({num: 0})).to.equal('one');
             expect(ptMZ.format({num: 0})).to.equal('other');
