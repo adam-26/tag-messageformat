@@ -144,7 +144,7 @@ defineProperty(MessageFormat, '__localeData__', {value: objCreate(null)});
 defineProperty(MessageFormat, '__addLocaleData', {value: function (data) {
     if (!(data && data.locale)) {
         throw new Error(
-            'Locale data provided to IntlMessageFormat is missing a ' +
+            'Locale data provided to TagMessageFormat is missing a ' +
             '`locale` property'
         );
     }
@@ -190,7 +190,7 @@ MessageFormat.prototype._findPluralRuleFunction = function (locale) {
     }
 
     throw new Error(
-        'Locale data added to IntlMessageFormat is missing a ' +
+        'Locale data added to TagMessageFormat is missing a ' +
         '`pluralRuleFunction` for :' + locale
     );
 };
@@ -292,7 +292,7 @@ MessageFormat.prototype._resolveLocale = function (locales) {
 
     var defaultLocale = locales.pop();
     throw new Error(
-        'No locale data has been added to IntlMessageFormat for: ' +
+        'No locale data has been added to TagMessageFormat for: ' +
         locales.join(', ') + ', or the default locale: ' + defaultLocale
     );
 };

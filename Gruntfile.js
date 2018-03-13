@@ -19,8 +19,8 @@ module.exports = function (grunt) {
 
         concat: {
             dist_with_locales: {
-                src: ['dist/intl-messageformat.js', 'dist/locale-data/*.js'],
-                dest: 'dist/intl-messageformat-with-locales.js',
+                src: ['dist/tag-messageformat.js', 'dist/locale-data/*.js'],
+                dest: 'dist/tag-messageformat-with-locales.js',
 
                 options: {
                     sourceMap: true
@@ -56,11 +56,11 @@ module.exports = function (grunt) {
                 options: {
                     prelude: [
                         '// GENERATED FILE',
-                        'var IntlMessageFormat = require("./core")["default"];\n\n'
+                        'var TagMessageFormat = require("./core")["default"];\n\n'
                     ].join('\n'),
 
                     wrapEntry: function (entry) {
-                        return 'IntlMessageFormat.__addLocaleData(' + entry + ');';
+                        return 'TagMessageFormat.__addLocaleData(' + entry + ');';
                     }
                 }
             },
@@ -69,19 +69,19 @@ module.exports = function (grunt) {
                 dest: 'dist/locale-data/',
                 options: {
                     wrapEntry: function (entry) {
-                        return 'IntlMessageFormat.__addLocaleData(' + entry + ');';
+                        return 'TagMessageFormat.__addLocaleData(' + entry + ');';
                     }
                 }
             }
         },
 
         bundle_jsnext: {
-            dest: 'dist/intl-messageformat.js',
+            dest: 'dist/tag-messageformat.js',
 
             options: {
                 main: 'nextjs.js',
-                namespace : 'IntlMessageFormat',
-                sourceRoot: 'intl-messageformat/'
+                namespace : 'TagMessageFormat',
+                sourceRoot: 'tag-messageformat/'
             }
         },
 
@@ -93,30 +93,30 @@ module.exports = function (grunt) {
             options: {
                 preserveComments        : 'some',
                 sourceMap               : true,
-                sourceMapRoot           : 'intl-messageformat/',
+                sourceMapRoot           : 'tag-messageformat/',
                 sourceMapIncludeSources : true
             },
 
             dist: {
                 options: {
-                    sourceMapIn : 'dist/intl-messageformat.js.map'
+                    sourceMapIn : 'dist/tag-messageformat.js.map'
                 },
 
                 files: {
-                    'dist/intl-messageformat.min.js': [
-                        'dist/intl-messageformat.js'
+                    'dist/tag-messageformat.min.js': [
+                        'dist/tag-messageformat.js'
                     ]
                 }
             },
 
             dist_with_locales: {
                 options: {
-                    sourceMapIn: 'dist/intl-messageformat-with-locales.js.map'
+                    sourceMapIn: 'dist/tag-messageformat-with-locales.js.map'
                 },
 
                 files: {
-                    'dist/intl-messageformat-with-locales.min.js': [
-                        'dist/intl-messageformat-with-locales.js'
+                    'dist/tag-messageformat-with-locales.min.js': [
+                        'dist/tag-messageformat-with-locales.js'
                     ]
                 }
             }

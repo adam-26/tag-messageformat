@@ -1,19 +1,20 @@
 Tag MessageFormat
 ==================
 
-Formats ICU Message strings with number, date, plural, and select placeholders to create localized messages.
+Formats ICU Message strings with tags, number, date, plural, and select placeholders to create localized messages.
 
 [![npm](https://img.shields.io/npm/v/tag-messageformat.svg)](https://www.npmjs.com/package/tag-messageformat)
 [![npm](https://img.shields.io/npm/dm/tag-messageformat.svg)](https://www.npmjs.com/package/tag-messageformat)
 [![CircleCI branch](https://img.shields.io/circleci/project/github/adam-26/tag-messageformat/master.svg)](https://circleci.com/gh/adam-26/tag-messageformat/tree/master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/69f68331d6a0047b1636/maintainability)](https://codeclimate.com/github/adam-26/intl-messageformat/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/69f68331d6a0047b1636/test_coverage)](https://codeclimate.com/github/adam-26/intl-messageformat/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/3b1578dea20364bfa78e/maintainability)](https://codeclimate.com/github/adam-26/tag-messageformat/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/3b1578dea20364bfa78e/test_coverage)](https://codeclimate.com/github/adam-26/tag-messageformat/test_coverage)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
+[![Sauce Test Status](https://saucelabs.com/buildstatus/SAUCE_CI)](https://saucelabs.com/u/SAUCE_CI)
 
 > This is a fork of [intl-messageformat](https://github.com/yahoo/intl-messageformat)
 
 _Differences_ from the original package:
- * It uses the [tag-messageformat-parser](github.com/adam-26/intl-messageformat-parser)
+ * It uses the [tag-messageformat-parser](https://github.com/adam-26/tag-messageformat-parser)
  * `Tags` are supported in messages - this is **not** part of the ICU message "spec"
  * The `other` option _defaults to required_ for `plural`, `select` and `selectordinal` - as defined in the ICU "spec"
  * Whitespace in `plural` messages is preserved
@@ -41,9 +42,9 @@ A tag **must** adhere to the following conventions:
 Here's an _simple_ example:
 
 ```js
-import IntlMessageFormat from 'tag-messageformat';
+import TagMessageFormat from 'tag-messageformat';
 
-var enNumPhotos = new IntlMessageFormat('By signing up you agree to our <x:link>terms and conditions</x:link>', 'en-US');
+var enNumPhotos = new TagMessageFormat('By signing up you agree to our <x:link>terms and conditions</x:link>', 'en-US');
 var output = enNumPhotos.format({
   link: (content) => `<a href="#">${content}</a>`
 });
@@ -59,7 +60,7 @@ Tags and arguments can be used in combination in ICU message formats.
 This example uses a `{name}` argument in a tag.
 
 ```js
-var enNumPhotos = new IntlMessageFormat('Welcome back <x:bold>{name}</x:bold>', 'en-US');
+var enNumPhotos = new TagMessageFormat('Welcome back <x:bold>{name}</x:bold>', 'en-US');
 var output = enNumPhotos.format({
   bold: (content) => `<span class="boldText">${content}</span>`,
   name: 'Bob'
@@ -78,14 +79,14 @@ This package aims to provide a way for you to manage and format your JavaScript 
 
 This implementation is based on the [Strawman proposal][strawman], but there are a few places this implementation diverges.
 
-_Note: This `IntlMessageFormat` API may change to stay in sync with ECMA-402, but this package will follow [semver][]._
+_Note: This `TagMessageFormat` API may change to stay in sync with ECMA-402, but this package will follow [semver][]._
 
 ### How It Works
 
-Messages are provided into the constructor as a `String` message, or a [pre-parsed AST][parser] object.
+Messages are provided into the constructor as a `String` message, or a [pre-parsed AST](https://github.com/adam-26/tag-messageformat-parser) object.
 
 ```js
-var msg = new IntlMessageFormat(message, locales, [formats]);
+var msg = new TagMessageFormat(message, locales, [formats]);
 ```
 
 The string `message` is parsed, then stored internally in a compiled form that is optimized for the `format()` method to produce the formatted string for displaying to the user.
@@ -117,11 +118,11 @@ var MESSAGES = {
 
 var output;
 
-var enNumPhotos = new IntlMessageFormat(MESSAGES['en-US'].NUM_PHOTOS, 'en-US');
+var enNumPhotos = new TagMessageFormat(MESSAGES['en-US'].NUM_PHOTOS, 'en-US');
 output = enNumPhotos.format({numPhotos: 1000});
 console.log(output); // => "You have 1,000 photos."
 
-var esNumPhotos = new IntlMessageFormat(MESSAGES['es-MX'].NUM_PHOTOS, 'es-MX');
+var esNumPhotos = new TagMessageFormat(MESSAGES['es-MX'].NUM_PHOTOS, 'es-MX');
 output = esNumPhotos.format({numPhotos: 1000});
 console.log(output); // => "Usted tiene 1,000 fotos."
 ```
@@ -138,7 +139,7 @@ The message syntax that this package uses is not proprietary, in fact it's a com
 
 * Formats numbers and dates/times in messages using [`Intl.NumberFormat`][Intl-NF] and [`Intl.DateTimeFormat`][Intl-DTF], respectively.
 
-* Optimized for repeated calls to an `IntlMessageFormat` instance's `format()` method.
+* Optimized for repeated calls to an `TagMessageFormat` instance's `format()` method.
 
 * Supports defining custom format styles/options.
 
@@ -177,13 +178,13 @@ if (!global.Intl) {
 
 _Note: When using the Intl.js Polyfill in Node.js, it will automatically load the locale data for all supported locales._
 
-### Loading Intl MessageFormat in a browser
+### Loading Tag MessageFormat in a browser
 
 ```html
-<script src="tag-messageformat/intl-messageformat.min.js"></script>
+<script src="tag-messageformat/tag-messageformat.min.js"></script>
 ```
 
-By default, Intl MessageFormat ships with the locale data for English (`en`) built-in to the library's runtime. When you need to format data in another locale, include its data; e.g., for French:
+By default, Tag MessageFormat ships with the locale data for English (`en`) built-in to the library's runtime. When you need to format data in another locale, include its data; e.g., for French:
 
 ```html
 <script src="tag-messageformat/locale-data/fr.js"></script>
@@ -196,15 +197,15 @@ _Note: All 200+ languages supported by this package use their root BCP 47 langua
 Simply `require()` this package:
 
 ```js
-var IntlMessageFormat, { stringBuilderFactory, arrayBuilderFactory } = require('tag-messageformat');
+var TagMessageFormat, { stringBuilderFactory, arrayBuilderFactory } = require('tag-messageformat');
 ```
 
 _Note: in Node.js, the data for all 200+ languages is loaded along with the library._
 
 ### Public API
 
-#### `IntlMessageFormat` Constructor
-To create a message to format, use the `IntlMessageFormat` constructor. The constructor takes four parameters:
+#### `TagMessageFormat` Constructor
+To create a message to format, use the `TagMessageFormat` constructor. The constructor takes four parameters:
 
  - **message** - _{String | AST}_ - String message (or pre-parsed AST) that serves as formatting pattern.
 
@@ -217,17 +218,17 @@ To create a message to format, use the `IntlMessageFormat` constructor. The cons
    * stringFormatFactory: function - Optional factory function for creating `StringFormat` instances - used to format simple argument values.
 
 ```js
-var msg = new IntlMessageFormat('My name is {name}.', 'en-US');
+var msg = new TagMessageFormat('My name is {name}.', 'en-US');
 
 // Allow plural and select ICU messages to be defined without an `other` option
-var msg = new IntlMessageFormat('My name is {name}.', 'en-US', {}, { requireOther: false });
+var msg = new TagMessageFormat('My name is {name}.', 'en-US', {}, { requireOther: false });
 ```
 
 #### Locale Resolution
 
-`IntlMessageFormat` uses a locale resolution process similar to that of the built-in `Intl` APIs to determine which locale data to use based on the `locales` value passed to the constructor. The result of this resolution process can be determined by call the `resolvedOptions()` prototype method.
+`TagMessageFormat` uses a locale resolution process similar to that of the built-in `Intl` APIs to determine which locale data to use based on the `locales` value passed to the constructor. The result of this resolution process can be determined by call the `resolvedOptions()` prototype method.
 
-The following are the abstract steps `IntlMessageFormat` goes through to resolve the locale value:
+The following are the abstract steps `TagMessageFormat` goes through to resolve the locale value:
 
 * If no extra locale data is loaded, the locale will _always_ resolved to `"en"`.
 
@@ -236,7 +237,7 @@ The following are the abstract steps `IntlMessageFormat` goes through to resolve
 * If there's data for the specified locale, then that locale will be resolved; i.e.,
 
     ```js
-    var mf = new IntlMessageFormat('', 'en-US');
+    var mf = new TagMessageFormat('', 'en-US');
     assert(mf.resolvedOptions().locale === 'en-US'); // true
     ```
 
@@ -249,7 +250,7 @@ _Note: When an array is provided for `locales`, the above steps happen for each 
 This method returns an object with the options values that were resolved during instance creation. It currently only contains a `locale` property; here's an example:
 
 ```js
-var msg = new IntlMessageFormat('', 'en-us');
+var msg = new TagMessageFormat('', 'en-us');
 console.log(msg.resolvedOptions().locale); // => "en-US"
 ```
 
@@ -278,7 +279,7 @@ _Note: A value **must** be supplied for every argument in the message pattern th
 Define custom format styles is useful you need supply a set of options to the underlying formatter; e.g., outputting a number in USD:
 
 ```js
-var msg = new IntlMessageFormat('The price is: {price, number, USD}', 'en-US', {
+var msg = new TagMessageFormat('The price is: {price, number, USD}', 'en-US', {
     number: {
         USD: {
             style   : 'currency',
@@ -315,7 +316,7 @@ var MESSAGES = {
     ...
 };
 
-var msg = new IntlMessageFormat(MESSAGES.photos, 'en-US');
+var msg = new TagMessageFormat(MESSAGES.photos, 'en-US');
 
 console.log(msg.format({numPhotos: 0}));    // => "You have no photos."
 console.log(msg.format({numPhotos: 1}));    // => "You have one photo."
@@ -324,9 +325,22 @@ console.log(msg.format({numPhotos: 1000})); // => "You have 1,000 photos."
 
 _Note: how when `numPhotos` was `1000`, the number is formatted with the correct thousands separator._
 
+Big Thanks
+-------
+
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
 
 License
 -------
 
 This software is free to use under the Yahoo! Inc. BSD license.
-See the [LICENSE file](https://github.com/adam-26/intl-messageformat/blob/master/LICENSE) for license text and copyright information.
+See the [LICENSE file](https://github.com/adam-26/tag-messageformat/blob/master/LICENSE) for license text and copyright information.
+
+[ICU]: http://userguide.icu-project.org/formatparse/messages
+[CLDR]: http://cldr.unicode.org/
+[Intl]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
+[Intl-NF]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
+[Intl-DTF]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
+[Intl-Node]: https://github.com/joyent/node/issues/6371
+[Intl.js]: https://github.com/andyearnshaw/Intl.js
+[semver]: http://semver.org/

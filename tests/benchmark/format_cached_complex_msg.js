@@ -2,7 +2,7 @@
 
 global.Intl || require('intl');
 
-var IntlMessageFormat = require('../../');
+var tagMessageFormat = require('../../');
 
 var msg = '' +
     '{gender_of_host, select, ' +
@@ -25,7 +25,7 @@ var msg = '' +
           '=2 {{host} invites {guest} and one other person to their party.}' +
           'other {{host} invites {guest} and # other people to their party.}}}}';
 
-var mf = new IntlMessageFormat(msg, 'en-US');
+var mf = new tagMessageFormat(msg, 'en-US');
 
 module.exports = function () {
     mf.format({

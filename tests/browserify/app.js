@@ -1,3 +1,3 @@
 'use strict';
 
-window.IntlMessageFormat = require('../../');
+window.TagMessageFormat = require('../../');

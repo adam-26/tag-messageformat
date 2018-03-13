@@ -20,11 +20,11 @@
     "Anthony Pipkin <a.pipkin@yahoo.com>"
   ],
   "bugs": {
-    "url": "https://github.com/adam-26/intl-messageformat/issues"
+    "url": "https://github.com/adam-26/tag-messageformat/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:adam-26/intl-messageformat.git"
+    "url": "git@github.com:adam-26/tag-messageformat.git"
   },
   "main": "index.js",
   "jsnext:main": "src/main.js",
@@ -33,7 +33,7 @@
     "./lib/locales.js": false
   },
   "dependencies": {
-    "tag-messageformat-parser": "2.1.0"
+    "tag-messageformat-parser": "2.2.0"
   },
   "devDependencies": {
     "benchmark": "^1.0.0",
@@ -48,11 +48,11 @@
     "grunt-contrib-connect": "^0.9.0",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-contrib-jshint": "^0.11.0",
-    "grunt-contrib-uglify": "^0.8.0",
+    "grunt-contrib-uglify": "^3.3.0",
     "grunt-extract-cldr-data": "^3.0.0",
     "grunt-json-remove-fields": "git://github.com/ericf/grunt-json-remove-fields#improve-files-and-output",
     "grunt-saucelabs": "^8.4.1",
-    "intl": "^0.1.4",
+    "intl": "^1.2.5",
     "istanbul": "^0.3.0",
     "mocha": "^2.0.1",
     "standard-version": "^4.3.0",
@@ -63,7 +63,7 @@
     "test:ci": "istanbul cover -- _mocha tests/runner.js --reporter xunit --reporter-options output=coverage/test-report.xml",
     "prepublish": "grunt"
   },
-  "homepage": "https://github.com/adam-26/intl-messageformat",
+  "homepage": "https://github.com/adam-26/tag-messageformat",
   "directories": {
     "test": "tests"
   },

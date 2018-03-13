@@ -1,7 +1,7 @@
 // This file is used for the build process to generate 'dist/intl-messageformat*' files
 
 import {defineProperty} from './src/es5';
-import IntlMessageFormat, {
+import TagMessageFormat, {
     stringBuilderFactory,
     arrayBuilderFactory,
     stringFormatFactory,
@@ -10,10 +10,10 @@ import IntlMessageFormat, {
 } from './src/main';
 
 // Define static methods for bundling
-defineProperty(IntlMessageFormat, 'stringBuilderFactory', {value: stringBuilderFactory});
-defineProperty(IntlMessageFormat, 'arrayBuilderFactory', {value: arrayBuilderFactory});
-defineProperty(IntlMessageFormat, 'stringFormatFactory', {value: stringFormatFactory});
-defineProperty(IntlMessageFormat, 'StringFormat', {value: StringFormat});
-defineProperty(IntlMessageFormat, 'BuilderContext', {value: BuilderContext});
+defineProperty(TagMessageFormat, 'stringBuilderFactory', {value: stringBuilderFactory});
+defineProperty(TagMessageFormat, 'arrayBuilderFactory', {value: arrayBuilderFactory});
+defineProperty(TagMessageFormat, 'stringFormatFactory', {value: stringFormatFactory});
+defineProperty(TagMessageFormat, 'StringFormat', {value: StringFormat});
+defineProperty(TagMessageFormat, 'BuilderContext', {value: BuilderContext});
 
-export default IntlMessageFormat;
+export default TagMessageFormat;
