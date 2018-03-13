@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.7.0"></a>
+# [3.7.0](https://github.com/adam-26/tag-messageformat/compare/v3.6.0...v3.7.0) (2018-03-13)
+
+
+### Bug Fixes
+
+* **build:** Fix missing test import ([726cb85](https://github.com/adam-26/tag-messageformat/commit/726cb85))
+* **build:** IE8 tests ([3a5a6df](https://github.com/adam-26/tag-messageformat/commit/3a5a6df))
+
+
+### Features
+
+* **code:** Rename IntlMessageFormat ([25f0c21](https://github.com/adam-26/tag-messageformat/commit/25f0c21))
+* **code:** Rename IntlMessageFormat ([#1](https://github.com/adam-26/tag-messageformat/issues/1)) ([6d02763](https://github.com/adam-26/tag-messageformat/commit/6d02763))
+
+
+
 <a name="3.6.0"></a>
 # [3.6.0](https://github.com/adam-26/intl-messageformat/compare/v3.5.1...v3.6.0) (2018-03-12)
 
